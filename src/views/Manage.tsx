@@ -17,7 +17,7 @@ function Manage() {
           tabBarIcon: () => (
           <Image source={require('../images/home.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
-        <Tab.Screen name="Đặt hàng" component={DatHang} options={{
+        <Tab.Screen name="Giỏ hàng" component={DatHang} options={{
           tabBarIcon: () => (
           <Image source={require('../images/shopping-cart.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
