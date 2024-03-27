@@ -1,43 +1,43 @@
 import React from 'react';
-import {StyleSheet, Text, View,Image, ImageBackground,TextInput,TouchableOpacity,TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
 
 function Login(): React.JSX.Element {
     return (
-        <ImageBackground style= {styles.background}
-        source= {require('../images/loginBackground.jpg')} >
-            <View style= {styles.mainView}>
+        <ImageBackground style={styles.background}
+            source={require('../images/loginBackground.jpg')} >
+            <View style={styles.mainView}>
                 <View style={styles.items}>
-                    <Text style={[styles.fontWeight],{fontSize: 11, color: 'black', marginTop:5}}>
+                    <Text style={[styles.fontWeight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
                         Chào mừng bạn đến với</Text>
-                    <Text style={[styles.fontWeight],{fontSize: 17, color: 'black', marginTop:5,marginBottom:20}}>
+                    <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 20 }]}>
                         THE COFFEE HOUSE</Text>
                     <View style={[styles.textBox]}>
                         <TextInput
-                            keyboardType= 'email-address'
+                            keyboardType='email-address'
                             placeholder='Email'
-                            style= {styles.textInput}
+                            style={styles.textInput}
                         />
                     </View>
                     <View style={[styles.textBox]}>
                         <TextInput
-                            secureTextEntry = {true}
+                            secureTextEntry={true}
                             placeholder='Password'
-                            style= {styles.textInput}
+                            style={styles.textInput}
                         />
                         <TouchableOpacity>
-                            <Image source= {require('../images/visible.png')}
-                                style={{height:20, width:20, marginRight: 10}}/>
+                            <Image source={require('../images/visible.png')}
+                                style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={[styles.button]}>
-                        <Text style={[styles.fontWeight],{fontSize: 14, color: 'white' }}>
+                        <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
                             Đăng nhập</Text>
                     </TouchableOpacity>
                     <View style={styles.component1}>
-                        <Text style={[styles.fontWeight],{fontSize: 13, color: 'gray'}}>
+                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'gray' }]}>
                             Don't have an account? </Text>
-                        <TouchableOpacity underlayColor="lightgray">
-                            <Text style={[styles.fontWeight],{fontSize: 13, color: 'black'}}>
+                        <TouchableOpacity>
+                            <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
                                 Sign up</Text>
                         </TouchableOpacity>
                     </View>
@@ -52,7 +52,7 @@ function Login(): React.JSX.Element {
 
 const styles = StyleSheet.create({
     background: {
-        flex:1,
+        flex: 1,
         justifyContent: 'flex-end',
     },
     mainView: {
@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     button: {
-        marginTop:15,
-        justifyContent:'center',
+        marginTop: 15,
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#FFAF45',
         borderRadius: 8,
@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
         height: 40,
     },
     component1: {
-        marginTop:20,
+        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'center',
     },
     textBox: {
-        marginTop:15,
+        marginTop: 15,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
