@@ -1,180 +1,170 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { Image, StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function CuaHang(): React.JSX.Element {
     const defaultValue = 'Tìm kiếm';
-    const [value, onChangeText] = useState(defaultValue);
-    const handleFocus = () => {
-        if (value === defaultValue) {
-            onChangeText('');
-        }
-    };
-
-    const handleBlur = () => {
-        if (!value.trim()) {
-            onChangeText(defaultValue);
-        }
-    };
+    const [value, setFindText] = useState(defaultValue);
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.innerHeader}>
-                    <View>
-                        <Text style={styles.textTitleHeader}>Cửa hàng</Text>
-                    </View>
-                    <View style={styles.spaceIcon}>
-                        <View style={styles.boxVoucher}>
-                            <Image source={require('../images/voucher.png')} style={styles.imageStyle}></Image>
-                            <Text style={styles.textInBoxVoucher}>14</Text>
+        <SafeAreaView style={styles.container}>
+            <ScrollView stickyHeaderIndices={[0]}>
+                <View style={styles.header}>
+                    <View style={styles.innerHeader}>
+                        <View>
+                            <Text style={styles.textTitleHeader}>Cửa hàng</Text>
                         </View>
-                        <View style={styles.boxNotify}>
-                            <Image source={require('../images/notification.png')} style={styles.imageStyle}></Image>
+                        <View style={styles.spaceIcon}>
+                            <TouchableOpacity style={styles.boxVoucher}>
+                                <Image source={require('../images/voucher.png')} style={styles.imageStyle}></Image>
+                                <Text style={styles.textInBoxVoucher}>14</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.boxNotify}>
+                                <Image source={require('../images/notification.png')} style={styles.imageStyle}></Image>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </View>
-                <View style={styles.sectionFind}>
-                    <View style={styles.boxFind}>
-                        <Image source={require('../images/find.png')} style={styles.imageStyle}></Image>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={text => onChangeText(text)}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            value={value}
-                        />
+                    <View style={styles.sectionFind}>
+                        <View style={styles.boxFind}>
+                            <Image source={require('../images/find.png')} style={styles.imageStyle}></Image>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Tìm kiếm"
+                                placeholderTextColor={"Black"}
+                                onChangeText={(text) => setFindText(text)}
+                            />
+                        </View>
+                        <TouchableOpacity style={styles.boxMap}>
+                            <Image source={require('../images/place.png')} style={styles.imageStyle}></Image>
+                            <Text style={styles.textInBoxVoucher}>Bản đồ</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.boxMap}>
-                        <Image source={require('../images/place.png')} style={styles.imageStyle}></Image>
-                        <Text style={styles.textInBoxVoucher}>Bản đồ</Text>
+                </View >
+                <View style={styles.footer}>
+                    <Text style={styles.textTitleFooter}>Các cửa hàng khác</Text>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location2.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.boxInfo}>
+                        <Image source={require('../images/location3.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
                     </View>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location4.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location5.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location6.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location7.png')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boxInfo}>
+                        <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
+                        <View style={styles.directionBoxLocation}>
+                            <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                            <Text style={styles.textAddress}>HCM Đường D1</Text>
+                            <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
-            </View >
-        <View style={styles.footer}>
-            <ScrollView>
-                <Text style={styles.textTitleFooter}>Các cửa hàng khác</Text>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location2.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location3.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location4.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location5.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location6.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location7.png')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-                <View style={styles.boxInfo}>
-                    <Image source={require('../images/location8.jpg')} style={styles.imageLocation}></Image>
-                    <View style={styles.directionBoxLocation}>
-                        <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                        <Text style={styles.textAddress}>HCM Đường D1</Text>
-                        <Text style={styles.textDistance}>Cách đây 0.7km</Text>
-                    </View>
-                </View>
-            </ScrollView >
-        </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
+
     );
 }
 
@@ -183,7 +173,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollView: {
-        justifyContent: "space-between"
+        position: 'relative'
     },
     textTitleHeader: {
         fontSize: 30,
@@ -200,7 +190,8 @@ const styles = StyleSheet.create({
         flex: 2,
         backgroundColor: 'white',
         justifyContent: 'space-between',
-        padding: 10
+        padding: 10,
+        position: 'absolute'
     },
     innerHeader: {
         flexDirection: 'row',
@@ -209,7 +200,7 @@ const styles = StyleSheet.create({
     footer: {
         flex: 8,
         backgroundColor: '#F7F3F3',
-        padding: 10
+        padding: 10,
     },
     spaceIcon: {
         flexDirection: 'row',
@@ -247,12 +238,12 @@ const styles = StyleSheet.create({
         height: 60,
         backgroundColor: '#fff',
         borderRadius: 20,
-        borderWidth: 1.5,
         margin: 10,
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'row',
-        padding: 10
+        padding: 10,
+        elevation: 5
     },
     input: {
         height: 40,
