@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 
-function Login(): React.JSX.Element {
+function SignUp(): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
 
     return (
@@ -21,7 +21,7 @@ function Login(): React.JSX.Element {
                     <View style={[styles.textBox]}>
                         <TextInput
                             keyboardType='email-address'
-                            placeholder='Email'
+                            placeholder='Enter email'
                             style={styles.textInput}
                         />
                     </View>
@@ -36,30 +36,34 @@ function Login(): React.JSX.Element {
                                 style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
                     </View>
-
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                        <Text style={[styles.fontWeight, { fontSize: 11, color: 'gray', marginTop: 5 }]}>
-                            Forgot your password?</Text>
-                    </TouchableOpacity>
+                    <View style={[styles.textBox]}>
+                        <TextInput
+                            secureTextEntry={true}
+                            placeholder='Confirm Password'
+                            style={styles.textInput}
+                        />
+                        <TouchableOpacity>
+                            <Image source={require('../images/visible.png')}
+                                style={{ height: 20, width: 20, marginRight: 10 }} />
+                        </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity style={[styles.button]}>
                         <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
-                            Login</Text>
+                            Sign up</Text>
                     </TouchableOpacity>
                     <View style={styles.component1}>
                         <Text style={[styles.fontWeight, { fontSize: 13, color: 'gray' }]}>
-                            Don't have an account? </Text>
+                            Already have an account? </Text>
                         <TouchableOpacity>
                             <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
-                                Sign up</Text>
+                                Sign in</Text>
                         </TouchableOpacity>
                     </View>
 
                 </View>
             </View>
         </ImageBackground>
-
-
     );
 }
 
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     button: {
-        marginTop: 20,
+        marginTop: 15,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#5F374B',
@@ -111,4 +115,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Login;
+export default SignUp;
