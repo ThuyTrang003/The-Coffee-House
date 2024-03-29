@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TrangChu from './TrangChu';
-import DatHang from './DatHang';
+import GioHang from './GioHang';
 import CuaHang from './CuaHang';
 import Khac from './Khac';
 import UuDai from './UuDai';
@@ -17,7 +17,7 @@ function Manage() {
           tabBarIcon: () => (
           <Image source={require('../images/home.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
-        <Tab.Screen name="Giỏ hàng" component={DatHang} options={{
+        <Tab.Screen name="Giỏ hàng" component={GioHang} options={{
           tabBarIcon: () => (
           <Image source={require('../images/shopping-cart.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
