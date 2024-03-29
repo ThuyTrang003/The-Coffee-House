@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 
+// bàn phím nhập pass che
+// xử lý nút login, nút x, nút forgot your password, nút signup
 function Login(): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [result, setResult] = useState(false);
+    const [hidePass, setHidePass] = useState(true);
+    const onPressHide = () => {
+        if (hidePass == false) {
+            setHidePass(true);
+        }
+        else setHidePass(false);
+    }
     return (
         <ImageBackground style={styles.background}
             source={require('../images/loginBackground.jpg')} >
@@ -14,7 +25,7 @@ function Login(): React.JSX.Element {
 
             <View style={styles.mainView}>
                 <View style={styles.items}>
-                    <Text style={[styles.fontWeight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
+                    <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
                         Chào mừng bạn đến với</Text>
                     <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 20 }]}>
                         THE COFFEE HOUSE</Text>
@@ -23,22 +34,26 @@ function Login(): React.JSX.Element {
                             keyboardType='email-address'
                             placeholder='Email'
                             style={styles.textInput}
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
                         />
                     </View>
                     <View style={[styles.textBox]}>
                         <TextInput
-                            secureTextEntry={true}
+                            secureTextEntry={hidePass}
                             placeholder='Password'
                             style={styles.textInput}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity style={{ padding: 8 }} onPress={onPressHide}>
                             <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20, marginRight: 10 }} />
+                                style={{ height: 20, width: 20 }} />
                         </TouchableOpacity>
                     </View>
 
                     <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                        <Text style={[styles.fontWeight, { fontSize: 11, color: 'gray', marginTop: 5 }]}>
+                        <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'gray', marginTop: 5 }]}>
                             Forgot your password?</Text>
                     </TouchableOpacity>
 
@@ -47,7 +62,7 @@ function Login(): React.JSX.Element {
                             Login</Text>
                     </TouchableOpacity>
                     <View style={styles.component1}>
-                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'gray' }]}>
+                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
                             Don't have an account? </Text>
                         <TouchableOpacity>
                             <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
@@ -76,6 +91,9 @@ const styles = StyleSheet.create({
     items: {
         margin: 30,
         alignItems: 'center',
+    },
+    fontWeightLight: {
+        fontFamily: 'Roboto-Light',
     },
     fontWeight: {
         fontWeight: 'bold',
@@ -108,6 +126,7 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 13,
         marginLeft: 10,
+        width: '80%'
     },
 });
 

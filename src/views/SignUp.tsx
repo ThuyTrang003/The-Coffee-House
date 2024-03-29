@@ -1,8 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 
+// xử lý nút Sign up, nút x, nút sign in
+//xử lý khi nhập sai email, 2 pass không giống nhau
+// bàn phím nhập pass che
+
+// function validateEmails(value: string): React.JSX.Element {
+//     const re = /\S+@\S+\.\S+/;
+//     if (re.test(value) == false) {
+//         return (
+//             <Text style={styles.ErrorMessage}>
+//                 Email không hợp lệ!</Text>
+//         );
+//     }
+//     else {
+//         return (<Text> </Text>)
+//     };
+// }
 function SignUp(): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPass, setConfirmPass] = useState('');
+    const [result, setResult] = useState(false);
+    const [hidePass, setHidePass] = useState(true);
+    const [hideCfPass, setHideCfPass] = useState(true);
+
+    const onPressHidePass = () => {
+        if (hidePass == false) {
+            setHidePass(true);
+        }
+        else setHidePass(false);
+    }
+    const onPressHideCfPass = () => {
+        if (hideCfPass == false) {
+            setHideCfPass(true);
+        }
+        else setHideCfPass(false);
+    }
 
     return (
         <ImageBackground style={styles.background}
@@ -14,37 +49,44 @@ function SignUp(): React.JSX.Element {
 
             <View style={styles.mainView}>
                 <View style={styles.items}>
-                    <Text style={[styles.fontWeight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
+                    <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
                         Chào mừng bạn đến với</Text>
-                    <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 20 }]}>
+                    <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 5 }]}>
                         THE COFFEE HOUSE</Text>
                     <View style={[styles.textBox]}>
                         <TextInput
                             keyboardType='email-address'
                             placeholder='Enter email'
                             style={styles.textInput}
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
                         />
                     </View>
+
                     <View style={[styles.textBox]}>
                         <TextInput
-                            secureTextEntry={true}
+                            secureTextEntry={hidePass}
                             placeholder='Password'
                             style={styles.textInput}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity style={styles.hideButton} onPress={onPressHidePass}>
                             <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20, marginRight: 10 }} />
+                                style={{ height: 20, width: 20 }} />
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.textBox]}>
                         <TextInput
-                            secureTextEntry={true}
+                            secureTextEntry={hideCfPass}
                             placeholder='Confirm Password'
                             style={styles.textInput}
+                            value={confirmPass}
+                            onChangeText={(text) => setConfirmPass(text)}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity style={styles.hideButton} onPress={onPressHideCfPass}>
                             <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20, marginRight: 10 }} />
+                                style={{ height: 20, width: 20 }} />
                         </TouchableOpacity>
                     </View>
 
@@ -53,7 +95,7 @@ function SignUp(): React.JSX.Element {
                             Sign up</Text>
                     </TouchableOpacity>
                     <View style={styles.component1}>
-                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'gray' }]}>
+                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
                             Already have an account? </Text>
                         <TouchableOpacity>
                             <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
@@ -81,11 +123,14 @@ const styles = StyleSheet.create({
         margin: 30,
         alignItems: 'center',
     },
+    fontWeightLight: {
+        fontFamily: 'Roboto-Light',
+    },
     fontWeight: {
         fontWeight: 'bold',
     },
     button: {
-        marginTop: 15,
+        marginTop: 30,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#5F374B',
@@ -99,7 +144,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     textBox: {
-        marginTop: 15,
+        marginTop: 30,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -112,6 +157,15 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 13,
         marginLeft: 10,
+        width: '80%'
+    },
+    hideButton: {
+        padding: 8,
+    },
+    ErrorMessage: {
+        fontSize: 11,
+        color: 'red',
+
     },
 });
 
