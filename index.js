@@ -9,4 +9,5 @@ import Manage from './src/views/Manage';
 import Login from './src/views/Login';
 import SignUp from './src/views/SignUp';
 import OTPVerify from './src/views/OTPVerify';
-AppRegistry.registerComponent(appName, () => Manage);
+import PersonalInfor from './src/views/PersonalInfor';
+AppRegistry.registerComponent(appName, () => PersonalInfor);

@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
 
 // xử lý nút Sign up, nút x, nút sign in
-//xử lý khi nhập sai email, 2 pass không giống nhau
 // bàn phím nhập pass che
 
-// function validateEmails(value: string): React.JSX.Element {
-//     const re = /\S+@\S+\.\S+/;
-//     if (re.test(value) == false) {
-//         return (
-//             <Text style={styles.ErrorMessage}>
-//                 Email không hợp lệ!</Text>
-//         );
-//     }
-//     else {
-//         return (<Text> </Text>)
-//     };
-// }
+function validateEmails(value: string): React.JSX.Element | null {
+    const re = /\S+@\S+\.\S+/;
+    if (re.test(value) == false) {
+        return (
+            <Text style={styles.ErrorMessage}>
+                Email không hợp lệ!</Text>
+        );
+    }
+    else return null;
+}
+
+function comparePass(pass: string, cfPass: string): React.JSX.Element | null {
+    if (pass == cfPass)
+        return null;
+    else
+        return <Text style={styles.ErrorMessage}>Mật khẩu không khớp!</Text>
+
+}
+
 function SignUp(): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
     const [email, setEmail] = useState('');
@@ -25,19 +31,6 @@ function SignUp(): React.JSX.Element {
     const [result, setResult] = useState(false);
     const [hidePass, setHidePass] = useState(true);
     const [hideCfPass, setHideCfPass] = useState(true);
-
-    const onPressHidePass = () => {
-        if (hidePass == false) {
-            setHidePass(true);
-        }
-        else setHidePass(false);
-    }
-    const onPressHideCfPass = () => {
-        if (hideCfPass == false) {
-            setHideCfPass(true);
-        }
-        else setHideCfPass(false);
-    }
 
     return (
         <ImageBackground style={styles.background}
@@ -63,6 +56,8 @@ function SignUp(): React.JSX.Element {
                         />
                     </View>
 
+                    {validateEmails(email)}
+
                     <View style={[styles.textBox]}>
                         <TextInput
                             secureTextEntry={hidePass}
@@ -71,11 +66,12 @@ function SignUp(): React.JSX.Element {
                             value={password}
                             onChangeText={(text) => setPassword(text)}
                         />
-                        <TouchableOpacity style={styles.hideButton} onPress={onPressHidePass}>
+                        <TouchableOpacity style={styles.hideButton} onPress={()=> setHidePass(!hidePass)}>
                             <Image source={require('../images/visible.png')}
                                 style={{ height: 20, width: 20 }} />
                         </TouchableOpacity>
                     </View>
+
                     <View style={[styles.textBox]}>
                         <TextInput
                             secureTextEntry={hideCfPass}
@@ -84,11 +80,13 @@ function SignUp(): React.JSX.Element {
                             value={confirmPass}
                             onChangeText={(text) => setConfirmPass(text)}
                         />
-                        <TouchableOpacity style={styles.hideButton} onPress={onPressHideCfPass}>
+                        <TouchableOpacity style={styles.hideButton} onPress={()=> setHideCfPass(!hideCfPass)}>
                             <Image source={require('../images/visible.png')}
                                 style={{ height: 20, width: 20 }} />
                         </TouchableOpacity>
                     </View>
+
+                    {comparePass(password, confirmPass)}
 
                     <TouchableOpacity style={[styles.button]}>
                         <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
@@ -144,7 +142,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     textBox: {
-        marginTop: 30,
+        marginTop: 20,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -163,7 +161,8 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     ErrorMessage: {
-        fontSize: 11,
+        fontSize: 10,
+        alignSelf: 'flex-end',
         color: 'red',
 
     },
