@@ -4,7 +4,11 @@ import React from "react";
 
 const window = Dimensions.get('window');
 
-function ChiTietSanPham(): React.JSX.Element {
+function ChiTietSanPham({ navigation, route }): React.JSX.Element {
+    const {data}  = route.params;
+    const handlePress = () => {
+        navigation.goBack()
+    }
     return (
         <View style={styles.container}>
             <ScrollView
@@ -20,10 +24,13 @@ function ChiTietSanPham(): React.JSX.Element {
                         <Image source={require('../images/favorite.png')}
                             style={{ height: 30, width: 30 }} />
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handlePress}>
+                        <Image source={require('../images/reject.png')} style={{ height: 20, width: 20 }} />
+                    </TouchableOpacity>
                 </ImageBackground>
                 <View style={styles.footer}>
                     <Text style={styles.infoTitle}>Mô tả</Text>
-                    <Text style={styles.textDescription}>Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng</Text>
+                    <Text style={styles.textDescription}>{data[0].des}</Text>
                     <Text style={styles.infoTitle}>Size</Text>
                     <View style={styles.SizeOuterContainer}>
                         <TouchableOpacity style={styles.SizeBox}>
@@ -103,6 +110,14 @@ const styles = StyleSheet.create({
         fontFamily: FONTFAMILY.poppins_medium,
         color: 'white'
     },
+    button: {
+        position: 'absolute',
+        width: 20,
+        height: 20,
+        backgroundColor: 'gray',
+        left: window.width - 30,
+        top: 10
+    }
 });
 
 export default ChiTietSanPham;

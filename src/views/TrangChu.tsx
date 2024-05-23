@@ -3,10 +3,29 @@ import { Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOp
 import ItemCard from "../component/ItemCard";
 
 const window = Dimensions.get('window');
-function TrangChu(): React.JSX.Element {
+function TrangChu({ navigation }): React.JSX.Element {
     const [value, setFindText] = useState("");
     const handleFind = (text: SetStateAction<string>) => {
         setFindText(text);
+    }
+    const DATA = [
+        {
+          id: '1',
+          des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+
+        },
+        {
+            id: '2',
+            des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+        },
+        {
+            id: '3',
+            des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+        },
+      ];
+      
+      const handlePress = () => {
+        navigation.navigate('ChiTietSanPham', { data: DATA });
     }
     return (
         <View style={styles.container}>
@@ -43,23 +62,47 @@ function TrangChu(): React.JSX.Element {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={styles.CategoryScrollViewStyle}>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
+                        <TouchableOpacity onPress={handlePress}>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
                     </ScrollView>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={styles.CategoryScrollViewStyle}>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
-                        <ItemCard></ItemCard>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ItemCard></ItemCard>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
             </ScrollView>

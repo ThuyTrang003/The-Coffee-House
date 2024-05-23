@@ -1,11 +1,12 @@
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StoreCard from "../component/StoreCard";
-function DSCuaHang(): React.JSX.Element {
+function DSCuaHang({navigation}): React.JSX.Element {
     const [value, setFindText] = useState("");
-    const navigation = useNavigation();
+    const handlePress = () => {
+        navigation.navigate('ChiTietCuaHang', {name: 'Coffee Hau'});
+    }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView stickyHeaderIndices={[0]}>
@@ -45,7 +46,7 @@ function DSCuaHang(): React.JSX.Element {
                 </View >
                 <View style={styles.footer}>
                     <Text style={styles.textTitleFooter}>Các cửa hàng khác</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handlePress}>
                         <StoreCard></StoreCard>
                     </TouchableOpacity>
                     <TouchableOpacity>

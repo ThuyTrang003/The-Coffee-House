@@ -3,7 +3,9 @@ import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpaci
 
 const window = Dimensions.get('window');
 
-function ChiTietCuaHang(): React.JSX.Element {
+function ChiTietCuaHang({navigation, route}): React.JSX.Element {
+
+    const {name} = route.params;
     const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -11,7 +13,9 @@ function ChiTietCuaHang(): React.JSX.Element {
         const { y } = event.nativeEvent.contentOffset;
         setButtonPosition({ x: window.width - 30, y: y + 10 });
     };
-
+    const handlePress = () => {
+        navigation.goBack()
+    }
     return (
         <View style={styles.container}>
             <ScrollView
@@ -21,12 +25,12 @@ function ChiTietCuaHang(): React.JSX.Element {
                 scrollEventThrottle={16}>
                 <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
                 <View style={styles.sectionText}>
-                    <Text style={styles.textName}>THE COFFEE HOUSE</Text>
+                    <Text style={styles.textName}>{name}</Text>
                     <Text style={styles.textAddress}>HCM DUONG D1</Text>
                     <Text style={styles.textTime}>Giờ mở cửa: 07:00 - 18:00</Text>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handlePress}>
                 <Image source={require('../images/reject.png')} style={{ height: 20, width: 20 }} />
             </TouchableOpacity>
             <View style={styles.buttonContainer}>
