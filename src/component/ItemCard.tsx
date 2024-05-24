@@ -9,11 +9,11 @@ const ItemCard = () => {
         <View style={styles.boxContainer}>
             <TouchableOpacity>
                 <ImageBackground
-                    source={require('../images/location1.jpg')}
+                    source={require('../images/coffee.png')}
                     style={styles.imageBackground}
                     resizeMode="cover">
                     <View style={styles.CardRatingContainer}>
-                        <Text style={styles.CardRatingText}>4,7</Text>
+                        <Text style={styles.CardRatingText}>⭐ 4,7</Text>
                     </View>
                 </ImageBackground>
             </TouchableOpacity>
@@ -23,7 +23,7 @@ const ItemCard = () => {
             </TouchableOpacity>
             <View style={styles.CardFooterRow}>
                 <Text style={styles.CardPriceCurrency}>
-                    $ <Text style={styles.CardPrice}>4.29</Text>
+                    <Text style={styles.CardPrice}>24.000đ</Text>
                 </Text>
                 <TouchableOpacity>
                     <Image source={require('../images/plus.png')} style={styles.iconStyle}></Image>

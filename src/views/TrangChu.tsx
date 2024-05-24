@@ -11,16 +11,19 @@ function TrangChu({ navigation }): React.JSX.Element {
     const DATA = [
         {
           id: '1',
-          des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+          name: 'Ô long nhiệt đới',
+          des: 'Cappuccino là đồ uống ngon nhất mà bạn có thể tìm thấy, chúc ngon miệng',
 
         },
         {
             id: '2',
-            des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+            name: 'Ô long nhiệt đới',
+            des: 'Cappuccino là đồ uống ngon nhất mà bạn có thể tìm thấy, chúc ngon miệng',
         },
         {
             id: '3',
-            des: 'Cappuccino la do uong ngon nhat ma ban co the tim thay, chuc ngon mieng',
+            name: 'Ô long nhiệt đới',
+            des: 'Cappuccino là đồ uống ngon nhất mà bạn có thể tìm thấy, chúc ngon miệng',
         },
       ];
       
@@ -83,8 +86,7 @@ function TrangChu({ navigation }): React.JSX.Element {
                     </ScrollView>
                     <ScrollView
                         horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.CategoryScrollViewStyle}>
+                        showsHorizontalScrollIndicator={false}>
                         <TouchableOpacity>
                             <ItemCard></ItemCard>
                         </TouchableOpacity>
@@ -157,9 +159,6 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 18
     },
-    CategoryScrollViewStyle: {
-
-    }
 });
 
 export default TrangChu;

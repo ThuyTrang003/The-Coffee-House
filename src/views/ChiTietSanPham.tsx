@@ -1,125 +1,187 @@
-import { Button, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Button, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../theme/theme";
-import React from "react";
+import React, { useState } from "react";
+import { RadioButton } from "react-native-paper";
 
 const window = Dimensions.get('window');
 
-function ChiTietSanPham({ navigation, route }): React.JSX.Element {
-    const {data}  = route.params;
+function ChiTietSanPham({ navigation, route }) {
+    const { data } = route.params;
+    const [quantity, setQuantity] = useState(1);
+    const [selectedSize, setSelectedSize] = useState('Lớn');
+    const prices: { [key: string]: number } = {
+        'Lớn': 65000,
+        'Vừa': 59000,
+        'Nhỏ': 49000,
+    };
+
+
+    const increaseQuantity = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const decreaseQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
     const handlePress = () => {
-        navigation.goBack()
-    }
+        navigation.goBack();
+    };
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.ScrollViewFlex}>
-                <ImageBackground style={styles.background}
-                    source={require('../images/location1.jpg')} >
-                    <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }}>
-                        <Image source={require('../images/back.png')}
-                            style={{ height: 30, width: 30 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ position: 'absolute', top: 30, right: 30 }}>
-                        <Image source={require('../images/favorite.png')}
-                            style={{ height: 30, width: 30 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={handlePress}>
-                        <Image source={require('../images/reject.png')} style={{ height: 20, width: 20 }} />
-                    </TouchableOpacity>
-                </ImageBackground>
-                <View style={styles.footer}>
-                    <Text style={styles.infoTitle}>Mô tả</Text>
-                    <Text style={styles.textDescription}>{data[0].des}</Text>
-                    <Text style={styles.infoTitle}>Size</Text>
-                    <View style={styles.SizeOuterContainer}>
-                        <TouchableOpacity style={styles.SizeBox}>
-                            <Text style={styles.SizeText}>S</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.SizeBox}>
-                            <Text style={styles.SizeText}>M</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.SizeBox}>
-                            <Text style={styles.SizeText}>L</Text>
-                        </TouchableOpacity>
-                    </View>
+                <Image source={require('../images/coffee.png')} style={styles.image} />
+                <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }} onPress={handlePress}>
+                    <Image source={require('../images/back.png')} style={{ height: 30, width: 30 }} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ position: 'absolute', top: 30, right: 30 }}>
+                    <Image source={require('../images/favorite.png')} style={{ height: 30, width: 30 }} />
+                </TouchableOpacity>
+                <View style={styles.detailsContainer}>
+                    <Text style={styles.productName}>{data[0].name}</Text>
+                    <Text style={styles.price}>{prices[selectedSize].toLocaleString()}đ</Text>
+                    <Text style={styles.description}>
+                        {data[0].des} <Text style={styles.moreText}>Xem thêm</Text>
+                    </Text>
+
+                    <Text style={styles.sectionTitle}>Size</Text>
+                    <RadioButton.Group onValueChange={newValue => setSelectedSize(newValue)} value={selectedSize}>
+                        {['Lớn', 'Vừa', 'Nhỏ'].map((size) => (
+                            <View key={size} style={styles.sizeOption}>
+                                <RadioButton value={size} />
+                                <View style={styles.sizeLabelContainer}>
+                                    <Text style={styles.sizeText}>{size}</Text>
+                                    <Text style={styles.sizePrice}>{prices[size].toLocaleString()}đ</Text>
+                                </View>
+                            </View>
+                        ))}
+                    </RadioButton.Group>
+
+
                 </View>
-                <Button
-                    title="Thêm vào giỏ hàng"
-                    color={COLORS.primaryOrangeHex}
-                />
             </ScrollView>
-        </View>
-    )
+            <View style={styles.payment}>
+                <View style={styles.quantityContainer}>
+                    <TouchableOpacity onPress={decreaseQuantity} style={styles.quantityButton}>
+                        <Text style={styles.quantityButtonText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantityText}>{quantity}</Text>
+                    <TouchableOpacity onPress={increaseQuantity} style={styles.quantityButton}>
+                        <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={styles.orderButton}>
+                    <Text style={styles.orderButtonText}>Chọn • {(prices[selectedSize] * quantity).toLocaleString()}đ</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white'
     },
     ScrollViewFlex: {
         flexGrow: 1,
         justifyContent: 'space-between',
     },
-    background: {
-        flex: 5,
-        justifyContent: 'flex-start',
+    image: {
+        width: window.width,
+        height: 400,
+        borderRadius: 2,
+        resizeMode: "stretch",
     },
-    boxInfo: {
-        paddingVertical: SPACING.space_24,
-        paddingHorizontal: SPACING.space_30,
-        backgroundColor: COLORS.primaryBlackRGBA,
-        borderTopLeftRadius: BORDERRADIUS.radius_20 * 2,
-        borderTopRightRadius: BORDERRADIUS.radius_20 * 2,
-        height: 100,
+    detailsContainer: {
+        padding: 16,
     },
-    footer: {
-        flex: 1,
-        backgroundColor: COLORS.primaryBlackHex,
-        padding: 10
+    productName: {
+        fontSize: 24,
+        fontWeight: 'bold',
     },
-    infoTitle: {
-        fontFamily: FONTFAMILY.poppins_semibold,
-        fontSize: FONTSIZE.size_16,
-        color: COLORS.primaryWhiteHex,
-        marginBottom: SPACING.space_10,
+    price: {
+        fontSize: 20,
+        color: 'black',
+        marginVertical: 8,
+        fontWeight: '700'
     },
-    textDescription: {
-        letterSpacing: 0.5,
-        fontFamily: FONTFAMILY.poppins_regular,
-        fontSize: FONTSIZE.size_14,
-        color: COLORS.primaryWhiteHex,
-        marginBottom: SPACING.space_30,
+    description: {
+        fontSize: 16,
+        color: '#555',
     },
-    SizeOuterContainer: {
-        flex: 1,
+    moreText: {
+        color: 'orange',
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 16,
+    },
+    sizeOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    sizeLabelContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        gap: SPACING.space_20,
-    },
-    SizeBox: {
         flex: 1,
-        backgroundColor: COLORS.primaryDarkGreyHex,
+        marginLeft: 8,
+    },
+    sizeText: {
+        fontSize: 16,
+    },
+    sizePrice: {
+        fontSize: 14,
+        color: '#888',
+    },
+    quantityContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: SPACING.space_24 * 2,
-        borderRadius: BORDERRADIUS.radius_10,
-        borderWidth: 2,
+        justifyContent: 'space-around',
+        margin: 10
     },
-    SizeText: {
-        fontFamily: FONTFAMILY.poppins_medium,
-        color: 'white'
+    quantityButton: {
+        padding: 8,
+        backgroundColor: '#fef7e6',
+        width: 40,
+        height: 40,
+        borderRadius: 30,
+        alignItems: 'center'
     },
-    button: {
-        position: 'absolute',
-        width: 20,
-        height: 20,
-        backgroundColor: 'gray',
-        left: window.width - 30,
-        top: 10
+    quantityButtonText: {
+        fontSize: 20,
+        color: '#e47907',
+        
+    },
+    quantityText: {
+        fontSize: 20,
+        marginHorizontal: 16,
+    },
+    orderButton: {
+        backgroundColor: 'orange',
+        padding: 16,
+        borderRadius: 4,
+        alignItems: 'center',
+        width: '60%',
+    },
+    orderButtonText: {
+        fontSize: 18,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    payment: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     }
 });
 
 export default ChiTietSanPham;
-
-

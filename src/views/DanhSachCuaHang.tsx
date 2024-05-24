@@ -5,7 +5,7 @@ import StoreCard from "../component/StoreCard";
 function DSCuaHang({navigation}): React.JSX.Element {
     const [value, setFindText] = useState("");
     const handlePress = () => {
-        navigation.navigate('ChiTietCuaHang', {name: 'Coffee Hau'});
+        navigation.navigate('ChiTietCuaHang', {name: 'THE COFFEE HOUSE'});
     }
     return (
         <SafeAreaView style={styles.container}>

@@ -3,39 +3,63 @@ import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpaci
 
 const window = Dimensions.get('window');
 
-function ChiTietCuaHang({navigation, route}): React.JSX.Element {
+function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
 
-    const {name} = route.params;
-    const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-    const scrollViewRef = useRef<ScrollView>(null);
-
-    const onScroll = (event: any) => {
-        const { y } = event.nativeEvent.contentOffset;
-        setButtonPosition({ x: window.width - 30, y: y + 10 });
-    };
+    const { name } = route.params;
     const handlePress = () => {
         navigation.goBack()
     }
+    // const handlePressToHome = () => {
+    //     navigation
+    // }
     return (
         <View style={styles.container}>
-            <ScrollView
-                ref={scrollViewRef}
-                style={{ flex: 1 }}
-                onScroll={onScroll}
-                scrollEventThrottle={16}>
-                <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
-                <View style={styles.sectionText}>
-                    <Text style={styles.textName}>{name}</Text>
-                    <Text style={styles.textAddress}>HCM DUONG D1</Text>
-                    <Text style={styles.textTime}>Giờ mở cửa: 07:00 - 18:00</Text>
+            <ScrollView>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}>
+                    <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
+                    <Image source={require('../images/location2.jpg')} style={styles.imageLocation}></Image>
+                    <Image source={require('../images/location3.jpg')} style={styles.imageLocation}></Image>
+                </ScrollView>
+                <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }} onPress={handlePress}>
+                    <Image source={require('../images/back.png')}
+                        style={styles.icon} />
+                </TouchableOpacity>
+                <View>
+                    <View style={styles.sectionText}>
+                        <Text style={styles.textName}>{name}</Text>
+                        <Text style={styles.textAddress}>HCM ĐƯỜNG D1</Text>
+                        <Text style={styles.text}>Giờ mở cửa: 07:00 - 18:00</Text>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button}>
+                        <Image source={require('../images/maps.png')}
+                            style={styles.icon} />
+                        <Text style={styles.buttonText}>281 Lê Văn Sỹ, Quận Tân Bình, Hồ Chí Minh</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <Image source={require('../images/favorite.png')}
+                            style={styles.icon} />
+                        <Text style={styles.buttonText}>Thêm vào danh sách yêu thích</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <Image source={require('../images/phone-call.png')}
+                            style={styles.icon} />
+                        <Text style={styles.buttonText}>Liên hệ</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <Image source={require('../images/share.png')}
+                            style={styles.icon} />
+                        <Text style={styles.buttonText}>Chia sẻ với bạn bè</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.button} onPress={handlePress}>
-                <Image source={require('../images/reject.png')} style={{ height: 20, width: 20 }} />
+            <TouchableOpacity style={styles.orderButton} >
+                <Text style={styles.orderButtonText}>Đặt sản phẩm</Text>
+                <Text style={styles.orderButtonTextSmall}>Tự đến lấy tại cửa hàng này</Text>
             </TouchableOpacity>
-            <View style={styles.buttonContainer}>
-                <Button title="Đặt sản phẩm" color='orange' />
-            </View>
         </View>
     );
 }
@@ -47,40 +71,66 @@ const styles = StyleSheet.create({
     },
     imageLocation: {
         width: window.width,
-        height: 300,
+        height: 400,
         borderRadius: 2,
-        resizeMode: "stretch"
+        resizeMode: "stretch",
+        marginLeft: 2,
+        marginRight: 2
     },
     textName: {
-        fontSize: 13,
+        fontSize: 15,
         fontWeight: '600',
     },
     textAddress: {
         fontSize: 20,
         color: 'black',
-        fontWeight: '500',
+        fontWeight: '700',
+
     },
-    textTime: {
+    text: {
         fontSize: 17,
-        color: 'gray',
+        color: 'gray'
     },
     sectionText: {
         justifyContent: 'space-around',
         margin: 10
     },
     buttonContainer: {
-        position: 'absolute',
-        bottom: 10,
-        left: 10,
-        right: 10
+        marginTop: 16,
+        width: '100%',
+    },
+    orderButton: {
+        backgroundColor: '#ff7f00',
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        margin: 20
+    },
+    orderButtonText: {
+        fontSize: 16,
+        color: '#fff',
+    },
+    orderButtonTextSmall: {
+        fontSize: 12,
+        color: '#fff',
     },
     button: {
-        position: 'absolute',
-        width: 20,
-        height: 20,
-        backgroundColor: 'gray',
-        left: window.width - 30,
-        top: 10
+        backgroundColor: '#f0f0f0',
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    },
+    buttonText: {
+        fontSize: 16,
+        color: 'black',
+        marginLeft: 20
+    },
+    icon: {
+        height: 30,
+        width: 30
     }
 });
 
