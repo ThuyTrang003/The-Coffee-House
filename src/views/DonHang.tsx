@@ -51,6 +51,91 @@ const DonHang = () => {
             totalCost: '150.000đ',
             orderTime: '12:00 - 20/05/2024',
         }
+        ,
+        {
+            id: '11',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '9',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '5',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '6',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '7',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '8',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+        ,
+        {
+            id: '10',
+            status: 'Đã hủy',
+            items: [
+                { id: '1', name: 'Oolong Tứ Quý Vải' },
+                { id: '2', name: 'Oolong Tứ Quý Vải' },
+                { id: '3', name: '1 sản phẩm khác' },
+            ],
+            totalCost: '150.000đ',
+            orderTime: '12:00 - 20/05/2024',
+        }
+
     ];
 
     const filteredOrders = orders.filter(order => order.status === selectedStatus);

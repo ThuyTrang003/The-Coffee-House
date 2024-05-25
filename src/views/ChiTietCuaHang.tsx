@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 17,
-        color: 'gray'
+        color: 'gray',
     },
     sectionText: {
         justifyContent: 'space-around',
@@ -97,14 +97,15 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 16,
-        width: '100%',
+        width: '100%'
     },
     orderButton: {
         backgroundColor: '#ff7f00',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
-        margin: 20
+        marginLeft: 20,
+        marginRight: 20
     },
     orderButtonText: {
         fontSize: 16,
@@ -121,12 +122,12 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
     buttonText: {
         fontSize: 16,
         color: 'black',
-        marginLeft: 20
+        marginLeft: 10
     },
     icon: {
         height: 30,
