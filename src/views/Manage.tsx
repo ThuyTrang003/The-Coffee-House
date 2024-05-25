@@ -1,11 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import TrangChu from './TrangChu';
 import GioHang from './GioHang';
 import CuaHang from './CuaHang';
 import Khac from './Khac';
 import UuDai from './UuDai';
 import { Image } from 'react-native';
+import SanPham from './SanPham';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,7 +13,7 @@ function Manage() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Trang chủ" component={TrangChu} options={{
+        <Tab.Screen name="Trang chủ" component={SanPham} options={{
           tabBarIcon: () => (
           <Image source={require('../images/home.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
