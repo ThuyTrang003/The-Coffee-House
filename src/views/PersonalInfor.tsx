@@ -39,7 +39,7 @@ function PersonalInfor(): React.JSX.Element {
     // const [isDisabledDay, setIsDisabledDay] = useState(false);
     // const [isDisabledMonth, setIsDisabledMonth] = useState(false);
     // const [isDisabledGender, setIsDisabledGender] = useState(false);
-    
+
 
 
     return (
@@ -88,7 +88,7 @@ function PersonalInfor(): React.JSX.Element {
                             <Image source={require('../images/down-arrow.png')}
                                 style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
-                        {showOptionsMonth && ( // !showOptionsDay && !showOptionsGender &&
+                        {showOptionsMonth && ( 
                             <GestureHandlerRootView style={styles.birthOptions}>
                                 <ScrollView style={styles.scrollView}>
                                     {months.map((option) => (
@@ -120,7 +120,8 @@ function PersonalInfor(): React.JSX.Element {
                                 style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
                         {showOptionsDay && (
-                            <GestureHandlerRootView style={[styles.birthOptions]}>
+                            <GestureHandlerRootView style={[styles.birthOptions]}
+                                >
                                 <ScrollView style={styles.scrollView}>
                                     {days.map((option) => (
                                         <TouchableOpacity
