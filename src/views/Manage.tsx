@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GioHang from './GioHang';
 import CuaHang from './CuaHang';
 import Khac from './Khac';
-import UuDai from './UuDai';
+import DonHang from './DonHang';
 import { Image } from 'react-native';
 import SanPham from './SanPham';
 
@@ -28,9 +28,9 @@ function Manage() {
           <Image source={require('../images/location.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
 
-        <Tab.Screen name="Ưu đãi" component={UuDai} options={{
+        <Tab.Screen name="Đơn hàng" component={DonHang} options={{
           tabBarIcon: () => (
-          <Image source={require('../images/coupon.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
+          <Image source={require('../images/clipboard.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
         
         <Tab.Screen name="Khác" component={Khac} options={{

@@ -1,10 +1,10 @@
-
-import { Dimensions, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../theme/theme";
 import React from "react";
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.32;
-const ItemCard = () => {
+
+const ItemCard = ({ item }) => {
     return (
         <View style={styles.boxContainer}>
             <TouchableOpacity>
@@ -13,17 +13,17 @@ const ItemCard = () => {
                     style={styles.imageBackground}
                     resizeMode="cover">
                     <View style={styles.CardRatingContainer}>
-                        <Text style={styles.CardRatingText}>⭐ 4,7</Text>
+                        <Text style={styles.CardRatingText}>⭐ {item.rating}</Text>
                     </View>
                 </ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Text style={styles.CardTitle}>Cappucchino</Text>
-                <Text style={styles.CardSubtitle}>Kem 1 chut machiato</Text>
+                <Text style={styles.CardTitle}>{item.name}</Text>
+                <Text style={styles.CardSubtitle}>{item.description}</Text>
             </TouchableOpacity>
             <View style={styles.CardFooterRow}>
                 <Text style={styles.CardPriceCurrency}>
-                    <Text style={styles.CardPrice}>24.000đ</Text>
+                    <Text style={styles.CardPrice}>{item.prices.medium}đ</Text>
                 </Text>
                 <TouchableOpacity>
                     <Image source={require('../images/plus.png')} style={styles.iconStyle}></Image>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
     CardRatingContainer: {
         flexDirection: 'row',
-        backgroundColor: COLORS.primaryBlackRGBA,
+        backgroundColor: COLORS.primaryGreyHex,
         alignItems: 'center',
         justifyContent: 'center',
         gap: SPACING.space_10,
@@ -98,7 +98,3 @@ const styles = StyleSheet.create({
 });
 
 export default ItemCard;
-
-
-
-

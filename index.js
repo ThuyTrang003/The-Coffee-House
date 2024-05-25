@@ -12,6 +12,6 @@ import OTPVerify from './src/views/OTPVerify';
 import CuaHang from './src/views/CuaHang';
 import PersonalInfor from './src/views/PersonalInfor';
 import GioHang from './src/views/GioHang';
-AppRegistry.registerComponent(appName, () => GioHang);
+AppRegistry.registerComponent(appName, () => Manage);
 
 

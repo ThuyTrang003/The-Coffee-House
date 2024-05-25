@@ -1,16 +1,17 @@
-
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 const window = Dimensions.get('window');
-const ItemCard = () => {
+const StoreCard = ({ store }) => {
+    const { name, address, distance } = store;
+
     return (
         <View style={styles.boxInfo}>
             <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
             <View style={styles.directionBoxLocation}>
-                <Text style={styles.textName}>THE COFFEE HOUSE</Text>
-                <Text style={styles.textAddress}>HCM Đường D1</Text>
-                <Text style={styles.textDistance}>Cách đây 0.7km</Text>
+                <Text style={styles.textName}>{name}</Text>
+                <Text style={styles.textAddress}>{address}</Text>
+                <Text style={styles.textDistance}>Cách đây {distance}</Text>
             </View>
         </View>
     );
@@ -24,15 +25,16 @@ const styles = StyleSheet.create({
         resizeMode: "stretch"
     },
     textName: {
-        fontSize: 10,
+        fontSize: 20,
         fontWeight: '600',
+        color: 'black'
     },
     textAddress: {
-        fontSize: 20,
+        fontSize: 15,
         color: 'black'
     },
     textDistance: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#C0BDBD',
     },
     directionBoxLocation: {
@@ -51,8 +53,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ItemCard;
-
-
-
-
+export default StoreCard;
