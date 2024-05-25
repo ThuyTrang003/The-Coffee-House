@@ -11,7 +11,7 @@ import SignUp from './src/views/SignUp';
 import OTPVerify from './src/views/OTPVerify';
 import CuaHang from './src/views/CuaHang';
 import PersonalInfor from './src/views/PersonalInfor';
-import cart from './src/views/cart';
-AppRegistry.registerComponent(appName, () => SignUp);
+import GioHang from './src/views/GioHang';
+AppRegistry.registerComponent(appName, () => GioHang);
 
 

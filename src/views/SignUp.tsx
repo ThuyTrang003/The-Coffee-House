@@ -6,11 +6,6 @@ import { NavigationContainer } from '@react-navigation/native';
 // xử lý nút Sign up, nút x, nút sign in
 // bàn phím nhập pass che
 
-function naviga({navigation}) {
-    return (
-        <View></View>
-    );
-}
 function validateEmails(value: string): React.JSX.Element | null {
     const re = /\S+@\S+\.\S+/;
     if (re.test(value) == false) {

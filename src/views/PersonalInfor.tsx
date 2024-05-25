@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
         borderBottomColor: 'gray',
         borderBottomWidth: 1,
         paddingBottom: 10,
-
     },
     mainView: {
         marginTop: 15,

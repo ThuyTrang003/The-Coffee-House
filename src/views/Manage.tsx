@@ -17,18 +17,22 @@ function Manage() {
           tabBarIcon: () => (
           <Image source={require('../images/home.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
+
         <Tab.Screen name="Giỏ hàng" component={GioHang} options={{
           tabBarIcon: () => (
           <Image source={require('../images/shopping-cart.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
+
         <Tab.Screen name="Cửa hàng" component={CuaHang} options={{
           tabBarIcon: () => (
           <Image source={require('../images/location.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
+
         <Tab.Screen name="Ưu đãi" component={UuDai} options={{
           tabBarIcon: () => (
           <Image source={require('../images/coupon.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
         ), headerShown: false}}/>
+        
         <Tab.Screen name="Khác" component={Khac} options={{
           tabBarIcon: () => (
           <Image source={require('../images/menu-bar.png')} style={{width: 30, height: 30}} resizeMode="stretch"></Image>
