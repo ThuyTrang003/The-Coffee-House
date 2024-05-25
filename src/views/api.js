@@ -8,4 +8,4 @@ export default function App() {
         const json = await resp.json();
         setData(json);
     }
-
+}
