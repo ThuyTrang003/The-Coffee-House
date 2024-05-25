@@ -10,4 +10,5 @@ import Login from './src/views/Login';
 import SignUp from './src/views/SignUp';
 import OTPVerify from './src/views/OTPVerify';
 import PersonalInfor from './src/views/PersonalInfor';
-AppRegistry.registerComponent(appName, () => PersonalInfor);
+import cart from './src/views/cart';
+AppRegistry.registerComponent(appName, () => SignUp);

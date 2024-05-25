@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
-
+import { ScrollView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 // xử lý nút Sign up, nút x, nút sign in
 // bàn phím nhập pass che
 
+function naviga({navigation}) {
+    return (
+        <View></View>
+    );
+}
 function validateEmails(value: string): React.JSX.Element | null {
     const re = /\S+@\S+\.\S+/;
     if (re.test(value) == false) {
@@ -39,71 +46,83 @@ function SignUp(): React.JSX.Element {
                 <Image source={require('../images/reject.png')}
                     style={{ height: 20, width: 20 }} />
             </TouchableOpacity>
+            <GestureHandlerRootView>
+                <View style={styles.mainView}>
+                    <KeyboardAvoidingView
+                        behavior={'padding'}
+                        keyboardVerticalOffset={0}
+                    >
 
-            <View style={styles.mainView}>
-                <View style={styles.items}>
-                    <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
-                        Chào mừng bạn đến với</Text>
-                    <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 5 }]}>
-                        THE COFFEE HOUSE</Text>
-                    <View style={[styles.textBox]}>
-                        <TextInput
-                            keyboardType='email-address'
-                            placeholder='Enter email'
-                            style={styles.textInput}
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                        />
-                    </View>
+                        <ScrollView>
+                            <View style={styles.items}>
+                                <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
+                                    Chào mừng bạn đến với</Text>
+                                <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 5 }]}>
+                                    THE COFFEE HOUSE</Text>
+                                <View style={[styles.textBox]}>
+                                    <TextInput
+                                        keyboardType='email-address'
+                                        placeholder='Enter email'
+                                        style={styles.textInput}
+                                        value={email}
+                                        onChangeText={(text) => setEmail(text)}
+                                    />
+                                </View>
 
-                    {validateEmails(email)}
+                                {validateEmails(email)}
 
-                    <View style={[styles.textBox]}>
-                        <TextInput
-                            secureTextEntry={hidePass}
-                            placeholder='Password'
-                            style={styles.textInput}
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                        />
-                        <TouchableOpacity style={styles.hideButton} onPress={()=> setHidePass(!hidePass)}>
-                            <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20 }} />
-                        </TouchableOpacity>
-                    </View>
+                                <View style={[styles.textBox]}>
+                                    <TextInput
+                                        secureTextEntry={hidePass}
+                                        placeholder='Password'
+                                        style={styles.textInput}
+                                        value={password}
+                                        onChangeText={(text) => setPassword(text)}
+                                    />
+                                    <TouchableOpacity style={styles.hideButton} onPress={() => setHidePass(!hidePass)}>
+                                        <Image source={require('../images/visible.png')}
+                                            style={{ height: 20, width: 20 }} />
+                                    </TouchableOpacity>
+                                </View>
 
-                    <View style={[styles.textBox]}>
-                        <TextInput
-                            secureTextEntry={hideCfPass}
-                            placeholder='Confirm Password'
-                            style={styles.textInput}
-                            value={confirmPass}
-                            onChangeText={(text) => setConfirmPass(text)}
-                        />
-                        <TouchableOpacity style={styles.hideButton} onPress={()=> setHideCfPass(!hideCfPass)}>
-                            <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20 }} />
-                        </TouchableOpacity>
-                    </View>
+                                <View style={[styles.textBox]}>
+                                    <TextInput
+                                        secureTextEntry={hideCfPass}
+                                        placeholder='Confirm Password'
+                                        style={styles.textInput}
+                                        value={confirmPass}
+                                        onChangeText={(text) => setConfirmPass(text)}
+                                    />
+                                    <TouchableOpacity style={styles.hideButton} onPress={() => setHideCfPass(!hideCfPass)}>
+                                        <Image source={require('../images/visible.png')}
+                                            style={{ height: 20, width: 20 }} />
+                                    </TouchableOpacity>
+                                </View>
 
-                    {comparePass(password, confirmPass)}
+                                {comparePass(password, confirmPass)}
 
-                    <TouchableOpacity style={[styles.button]}>
-                        <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
-                            Sign up</Text>
-                    </TouchableOpacity>
-                    <View style={styles.component1}>
-                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
-                            Already have an account? </Text>
-                        <TouchableOpacity>
-                            <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
-                                Sign in</Text>
-                        </TouchableOpacity>
-                    </View>
+                                <TouchableOpacity style={[styles.button]}>
+                                    <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
+                                        Sign up</Text>
+                                </TouchableOpacity>
+                                <View style={styles.component1}>
+                                    <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
+                                        Already have an account? </Text>
+                                    <TouchableOpacity>
+                                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
+                                            Sign in</Text>
+                                    </TouchableOpacity>
+                                </View>
 
+                            </View>
+
+
+                        </ScrollView>
+                        {/* </GestureHandlerRootView> */}
+                    </KeyboardAvoidingView>
                 </View>
-            </View>
-        </ImageBackground>
+            </GestureHandlerRootView>
+        </ImageBackground >
     );
 }
 

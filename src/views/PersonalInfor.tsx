@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-//xử lý checkbox giới tính
+//1 component hoạt động, các component khác bị vô hiệu hóa
 //trạng thái của button tạo tài khoản khi chưa thực hiện xong
 const screenWidth = Dimensions.get('window').width;
 
@@ -27,29 +26,21 @@ function PersonalInfor(): React.JSX.Element {
 
     const days = Array.from({ length: 31 }, (_, index) => index + 1);
     const months = Array.from({ length: 12 }, (_, index) => index + 1);
+    const genders = [{ value: 'Nam' }, { value: 'Nữ' }];
 
     const [day, setDay] = useState('Ngày sinh');
     const [month, setMonth] = useState('Tháng sinh');
-    const [gender, setGender] = useState('Chưa chọn ngày sinh');
+    const [gender, setGender] = useState('Chưa chọn giới tính');
 
     const [showOptionsDay, setShowOptionsDay] = useState(false);
     const [showOptionsMonth, setShowOptionsMonth] = useState(false);
     const [showOptionsGender, setShowOptionsGender] = useState(false);
 
-    const options = [
-        { id: 1, label: 'Option 1' },
-        { id: 2, label: 'Option 2' },
-        { id: 3, label: 'Option 3' },
-        // Thêm các tùy chọn khác nếu cần
-    ];
-    const onPressTick = () => {
-        if (tick == false) {
-            setTick(true);
-        }
-        else {
-            setTick(false);
-        }
-    }
+    // const [isDisabledDay, setIsDisabledDay] = useState(false);
+    // const [isDisabledMonth, setIsDisabledMonth] = useState(false);
+    // const [isDisabledGender, setIsDisabledGender] = useState(false);
+    
+
 
     return (
         <View style={styles.background}>
@@ -97,18 +88,20 @@ function PersonalInfor(): React.JSX.Element {
                             <Image source={require('../images/down-arrow.png')}
                                 style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
-                        {showOptionsMonth && (
+                        {showOptionsMonth && ( // !showOptionsDay && !showOptionsGender &&
                             <GestureHandlerRootView style={styles.birthOptions}>
                                 <ScrollView style={styles.scrollView}>
                                     {months.map((option) => (
                                         <TouchableOpacity
                                             key={option}
-                                            style={[
-                                                styles.birthOption,
-                                            ]}
-                                            onPress={() => { setMonth('Tháng ' + option.toString()); setShowOptionsMonth(!showOptionsMonth); }}
+                                            style={[styles.option]}
+                                            onPress={() => {
+                                                setMonth('Tháng ' + option.toString());
+                                                setShowOptionsMonth(!showOptionsMonth);
+                                            }}
 
                                         >
+
                                             <Text style={[styles.optionText]}>{option}</Text>
                                         </TouchableOpacity>
                                     ))}
@@ -132,11 +125,8 @@ function PersonalInfor(): React.JSX.Element {
                                     {days.map((option) => (
                                         <TouchableOpacity
                                             key={option}
-                                            style={[
-                                                styles.birthOption,
-                                            ]}
+                                            style={[styles.option]}
                                             onPress={() => { setDay('Ngày ' + option.toString()); setShowOptionsDay(!showOptionsDay); }}
-
                                         >
                                             <Text style={[styles.optionText]}>{option}</Text>
                                         </TouchableOpacity>
@@ -146,13 +136,29 @@ function PersonalInfor(): React.JSX.Element {
                         )}
                     </View>
                 </View>
-
-                <TouchableOpacity style={[styles.textBox]}>
-                    <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'black', marginLeft: 10 }]}>
-                        {gender}</Text>
-                    <Image source={require('../images/down-arrow.png')}
-                        style={{ height: 20, width: 20, marginRight: 10 }} />
-                </TouchableOpacity>
+                <View>
+                    <TouchableOpacity
+                        onPress={() => setShowOptionsGender(!showOptionsGender)}
+                        style={[styles.textBox, { position: 'relative' }]}>
+                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'black', marginLeft: 10 }]}>
+                            {gender}</Text>
+                        <Image source={require('../images/down-arrow.png')}
+                            style={{ height: 20, width: 20, marginRight: 10 }} />
+                    </TouchableOpacity>
+                    {showOptionsGender && (
+                        <GestureHandlerRootView style={[styles.genderOptions]}>
+                            {genders.map((option) => (
+                                <TouchableOpacity
+                                    key={option.value}
+                                    style={[styles.option]}
+                                    onPress={() => { setGender(option.value); setShowOptionsGender(!showOptionsGender); }}
+                                >
+                                    <Text style={[styles.optionText]}>{option.value}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </GestureHandlerRootView>
+                    )}
+                </View>
 
                 <View style={[styles.dieuKhoan]}>
                     <TouchableOpacity onPress={() => setTick(!tick)}>
@@ -237,7 +243,15 @@ const styles = StyleSheet.create({
         height: 225,
         backgroundColor: 'white',
     },
-    birthOption: {
+    genderOptions: {
+        top: 60,
+        position: 'absolute',
+        zIndex: 2,
+        height: 90,
+        width: '100%',
+        backgroundColor: 'white',
+    },
+    option: {
         width: '100%',
         height: 45,
         borderColor: 'gainsboro',

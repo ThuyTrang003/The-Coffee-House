@@ -5,7 +5,7 @@ function TrangChu(): React.JSX.Element {
     return (
         <View>
             <View style={styles.header}>
-                <Text>Cửa hàng Trang mới sửa ở nhánh ThuyTrang</Text>
+                <Text>Cửa hàng</Text>
                 <Image source={require('../images/voucher.png')} style={styles.icon1} resizeMode="stretch"></Image>
                 <Image source={require('../images/notification.png')} style={styles.icon1} resizeMode="stretch"></Image>
             </View>
