@@ -5,7 +5,10 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 const screenWidth = Dimensions.get('window').width;
 
-const favouriteItem = (item: any) => {
+
+
+function itemCart(item: any) {
+    //chứa dữ liệu của 1 item
     // biến cho size
     const sizes = [
         { label: 'S', value: 'S' },
@@ -13,24 +16,32 @@ const favouriteItem = (item: any) => {
         { label: 'L', value: 'L' },
     ];
     const [openSize, setOpenSize] = useState(false);
-    const [selectedSize, setSelectedSize] = useState('S'); //biến 
+    const [selectedSize, setSelectedSize] = useState(item.Size); //biến 
 
-    const selectSize = (option: any) => {
-        setSelectedSize(option);
+    const selectSize = (newSize: any) => {
+        setSelectedSize(newSize);
         setOpenSize(false);
+        //cập nhật số lượng lại vào trong item
+        //item.Size = newSize;
     };
+
     //biến cho số lượng 
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(item.Quantity);
 
     const increaseCount = () => {
         setCount(count + 1);
+        //cập nhật số lượng
+        //item.Quantity = count;
     };
     const decreaseCount = () => {
         if (count > 1)
             setCount(count - 1);
+        //cập nhật số lượng
+        //item.Quantity = count;
     };
     //biến cho giá
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState(item.Price);
+
     return (
         <View style={[styles.item]}>
             <View style={{ flexDirection: 'row' }}>
@@ -163,4 +174,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default favouriteItem;
+export default itemCart;
+

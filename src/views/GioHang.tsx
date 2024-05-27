@@ -4,8 +4,17 @@ import Modal from 'react-native-modal';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dropdown } from 'react-native-element-dropdown';
+import itemCart from "../component/itemCart";
+import { FlatList } from "react-native-gesture-handler";
+import ItemCart from '../component/itemCart';
 
 const screenWidth = Dimensions.get('window').width;
+//chứa dữ liệu của 1 item
+const [data, setData] = useState([
+    { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: '30000', quantity: 1 },
+    { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: '30000', quantity: 1 },
+    { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: '30000', quantity: 1 },
+]);
 
 
 function GioHang(): React.JSX.Element {
@@ -116,7 +125,7 @@ function GioHang(): React.JSX.Element {
     return (
         <View style={styles.background}>
             <View style={styles.header}>
-                <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray'}]}>
+                <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
                     Xóa</Text>
                 <Text style={[styles.fontWeight, { fontSize: 15, color: 'black', marginLeft: (screenWidth - 230) / 2 }]}>
                     Xác nhận đơn hàng</Text>
@@ -146,58 +155,17 @@ function GioHang(): React.JSX.Element {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={[styles.item]}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity>
-                                    <Image source={require('../images/bin.png')}
-                                        style={{ height: 17, width: 17, marginRight: 10 }} />
-                                </TouchableOpacity>
-                                <View>
-                                    <View style={[styles.categoryInfor]}>
-                                        <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                            Olong Tứ Quý Vải</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Dropdown
-                                            style={[styles.dropdown, {}]}
-                                            placeholderStyle={styles.placeholderStyle}
-                                            selectedTextStyle={styles.selectedTextStyle}
-                                            itemTextStyle={styles.itemTextStyle}
-                                            iconStyle={styles.iconStyle}
-                                            data={sizes}
-                                            labelField="label"
-                                            valueField="value"
-                                            placeholder="S" // lấy thông tin
-                                            value={selectedSize}
-                                            onChange={item => {
-                                                selectSize(item.value);
-                                            }}
-                                        />
-                                        {/* số lượng */}
-                                        <View style={[styles.quantityButton]} >
-                                            <TouchableOpacity
-                                                onPress={decreaseCount}>
-                                                <Image source={require('../images/minus.png')}
-                                                    style={{ height: 13, width: 15 }} />
+                        {/* chứa component */}
+                        <FlatList
+                            data={data}
+                            renderItem={({ item }) => (
+                                <itemCart item={item} />
+                            )}
+                            keyExtractor={(item) => item.id}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        />
 
-                                            </TouchableOpacity>
-
-                                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                                {count}</Text>
-
-                                            <TouchableOpacity
-                                                onPress={increaseCount}>
-                                                <Image source={require('../images/plus1.png')}
-                                                    style={{ height: 13, width: 15 }} />
-
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                            <Text style={{ fontSize: 12, color: 'black', marginBottom: 10 }}>
-                                85.000đ</Text>
-                        </View>
                     </View>
                 </ScrollView>
             </GestureHandlerRootView>
