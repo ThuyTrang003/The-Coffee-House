@@ -8,7 +8,6 @@ import { Dropdown } from 'react-native-element-dropdown';
 const screenWidth = Dimensions.get('window').width;
 
 
-
 function GioHang(): React.JSX.Element {
 
     const [openModal, setOpenModal] = React.useState(false);
