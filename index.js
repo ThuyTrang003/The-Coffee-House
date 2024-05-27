@@ -14,6 +14,7 @@ import PersonalInfor from './src/views/PersonalInfor';
 import GioHang from './src/views/GioHang';
 import NavigatorLogin from './src/views/NavigatorLogin';
 import favourite from './src/views/favourite';
-AppRegistry.registerComponent(appName, () => favourite);
+import thongTinCaNhan from './src/views/thongTinCaNhan';
+AppRegistry.registerComponent(appName, () => thongTinCaNhan);
 
 
