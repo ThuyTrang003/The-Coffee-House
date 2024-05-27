@@ -2,16 +2,14 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 const window = Dimensions.get('window');
-const StoreCard = ({ store }) => {
-    const { name, address, distance } = store;
+const StoreCard = ({ item }) => {
 
     return (
         <View style={styles.boxInfo}>
-            <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
+            <Image source={{ uri: item.ImageSource }} style={styles.imageLocation}></Image>
             <View style={styles.directionBoxLocation}>
-                <Text style={styles.textName}>{name}</Text>
-                <Text style={styles.textAddress}>{address}</Text>
-                <Text style={styles.textDistance}>Cách đây {distance}</Text>
+                <Text style={styles.textName}>{item.Name}</Text>
+                <Text style={styles.textStreet}>{item.Street}</Text>
             </View>
         </View>
     );
@@ -29,7 +27,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: 'black'
     },
-    textAddress: {
+    textStreet: {
         fontSize: 15,
         color: 'black'
     },

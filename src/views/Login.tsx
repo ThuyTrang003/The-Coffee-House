@@ -24,7 +24,6 @@ function Login({ navigation }): React.JSX.Element {
                 const user = userCredential.user;
                 if (user) {
                     console.log('UID của User:', user.uid);
-                    // Navigate to TrangChu and pass user information
                     navigation.navigate('Manage', { user: user });
                 }
             } catch (error) {

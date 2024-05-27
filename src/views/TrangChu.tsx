@@ -5,32 +5,60 @@ import { FlatList } from "react-native-gesture-handler";
 import { firebase } from '../firebase/FirebaseConfig'
 const window = Dimensions.get('window');
 function TrangChu({ navigation, route }) {
-    // const {user} = route.params;
+    const {user, goBack} = route.params;
     const [value, setFindText] = useState("");
     const [selectedDrink, setSelectedDrink] = useState('Cappucchino');
     const handleFind = (text) => {
         setFindText(text);
     }
     const handleBackLogin = () => {
-        //goBack();
+        goBack();
     };
-    const drink = ['Coffee', 'Tea', 'Juice'];
+    const drink = ['Cà Phê', 'Trà', 'Nước Ép'];
 
-    const [CoffeeData, setCoffeData] = useState([])
+    const [CoffeeData, setCoffeeData] = useState([])
     const coffeeDataQry = firebase.firestore().collection('CoffeeData')
 
     const [TeaData, setTeaData] = useState([])
     const teaDataQry = firebase.firestore().collection('TeaData')
+
+    const [JuiceData, setJuiceData] = useState([])
+    const juiceDataQry = firebase.firestore().collection('Juice')
     useEffect(() => {
-        coffeeDataQry.onSnapshot(snapshot => {
-            setCoffeData(snapshot.docs.map(doc => doc.data()))
-        })
-        teaDataQry.onSnapshot(snapshot => {
-            setTeaData(snapshot.docs.map(doc => doc.data()))
-        })
-    }, [])
+        const unsubscribeCoffee = coffeeDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // Thêm id từ document id của Firebase
+            }));
+            setCoffeeData(data);
+        });
+
+        const unsubscribeTea = teaDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // Thêm id từ document id của Firebase
+            }));
+            setTeaData(data);
+        });
+
+        const unsubscribeJuice = juiceDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // Thêm id từ document id của Firebase
+            }));
+            setJuiceData(data);
+        });
+
+        // Cleanup subscriptions on unmount
+        return () => {
+            unsubscribeCoffee();
+            unsubscribeTea();
+            unsubscribeJuice();
+        };
+    }, []);
     console.log(CoffeeData)
     console.log(TeaData)
+    console.log(JuiceData)
     const handleSelectedDrink = (value) => {
         if (value != selectedDrink) {
             setSelectedDrink(value);
@@ -38,7 +66,7 @@ function TrangChu({ navigation, route }) {
     }
 
     const handlePress = (selectedItem) => {
-        navigation.navigate('ChiTietSanPham', { data: selectedItem });
+        navigation.navigate('ChiTietSanPham', { data: selectedItem, user: user });
     };
 
     return (
@@ -91,7 +119,7 @@ function TrangChu({ navigation, route }) {
                             </TouchableOpacity>
 
                         )}
-                        keyExtractor={(item, index) => index.toString()} // Sử dụng index nếu không có ID
+                        keyExtractor={(item) => item.id}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     />
@@ -103,7 +131,19 @@ function TrangChu({ navigation, route }) {
                             </TouchableOpacity>
 
                         )}
-                        keyExtractor={(item, index) => index.toString()} // Sử dụng index nếu không có ID
+                        keyExtractor={(item) => item.id}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                    <FlatList
+                        data={JuiceData}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => handlePress(item)}>
+                                <ItemCard item={item} />
+                            </TouchableOpacity>
+
+                        )}
+                        keyExtractor={(item) => item.id}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     />

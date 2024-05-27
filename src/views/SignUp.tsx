@@ -44,7 +44,8 @@ function SignUp({navigation}): React.JSX.Element {
             await firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredentials) => {
                     const uid = userCredentials?.user?.uid;
-                    console.log('Tạo tài khoản thành công')
+                    console.log('Tạo tài khoản thành công');
+                    navigation.navigate('Login');
             })
         } catch (error){
             console.log('Error...')

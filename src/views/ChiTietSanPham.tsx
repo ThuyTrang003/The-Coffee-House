@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { RadioButton } from "react-native-paper";
+import { firebase } from "../firebase/FirebaseConfig";
+import { AuthContext } from "../context/AuthContext";
 
 const window = Dimensions.get('window');
 
 function ChiTietSanPham({ navigation, route }) {
-    const { data } = route.params;
+    const { data, user } = route.params;
+
+    if (data === undefined) {
+        navigation.navigate('TrangChu');
+    }
+
     const [quantity, setQuantity] = useState(1);
     const [selectedSize, setSelectedSize] = useState('SizeSmall');
 
     useEffect(() => {
-        // Reset số lượng về 1 khi chọn size khác
         setQuantity(1);
     }, [selectedSize]);
 
@@ -37,7 +43,7 @@ function ChiTietSanPham({ navigation, route }) {
             case 'SizeLarge':
                 return data.Price.SizeLarge;
             default:
-                return 0; // Hoặc giá mặc định nếu không tìm thấy
+                return 0;
         }
     };
 
@@ -45,7 +51,6 @@ function ChiTietSanPham({ navigation, route }) {
         const selectedPrice = getPriceBySize(selectedSize);
         return selectedPrice ? selectedPrice * quantity : 0;
     };
-    
 
     const mapSizeToDisplayValue = (size) => {
         switch (size) {
@@ -59,7 +64,56 @@ function ChiTietSanPham({ navigation, route }) {
                 return size;
         }
     };
-    
+
+    const AddtoCartHandler = async () => {
+        const date = new Date().getTime().toString();
+
+        const docref = firebase.firestore().collection('UserCart').doc(user.uid);
+        const itemData = {
+            itemId: data.id,
+            itemSize: selectedSize,
+            itemQuantity: quantity,
+            userId: user.uid,
+            cartItemId: date + user.uid
+        };
+
+        try {
+            const doc = await docref.get();
+            if (doc.exists) {
+                const cartItems = doc.data().cartItems || [];
+
+                const existingItemIndex = cartItems.findIndex((item) => item.itemId === data.id && item.itemSize === selectedSize);
+
+                if (existingItemIndex !== -1) {
+                    const existingItem = cartItems[existingItemIndex];
+                    const updatedItem = {
+                        ...existingItem,
+                        itemQuantity: existingItem.itemQuantity + quantity
+                    };
+
+                    cartItems[existingItemIndex] = updatedItem;
+                    docref.update({
+                        cartItems: cartItems,
+                    });
+                    console.log('Updated');
+                } else {
+                    docref.update({
+                        cartItems: firebase.firestore.FieldValue.arrayUnion(itemData)
+                    });
+                    console.log('Added');
+                }
+            } else {
+                docref.set({
+                    cartItems: [itemData],
+                });
+                console.log('Added');
+            }
+            alert('Đã thêm vào giỏ hàng');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -101,7 +155,7 @@ function ChiTietSanPham({ navigation, route }) {
                         <Text style={styles.quantityButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.orderButton}>
+                <TouchableOpacity style={styles.orderButton} onPress={() => AddtoCartHandler()}>
                     <Text style={styles.orderButtonText}>Chọn • {(getTotalPrice()).toLocaleString()}đ</Text>
                 </TouchableOpacity>
             </View>
@@ -183,7 +237,6 @@ const styles = StyleSheet.create({
     quantityButtonText: {
         fontSize: 20,
         color: '#e47907',
-
     },
     quantityText: {
         fontSize: 20,

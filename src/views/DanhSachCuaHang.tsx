@@ -1,32 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StoreCard from "../component/StoreCard";
-
+import {firebase} from "../firebase/FirebaseConfig"
 function DSCuaHang({ navigation }): React.JSX.Element {
     const [value, setFindText] = useState("");
 
-    const handlePress = () => {
-        navigation.navigate('ChiTietCuaHang', { name: 'THE COFFEE HOUSE' });
+    const [StoreData, setStoreData] = useState([])
+    const storeDataQry = firebase.firestore().collection('StoreData')
+    useEffect(() => {
+        const unsubscribeStore = storeDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // Thêm id từ document id của Firebase
+            }));
+            setStoreData(data);
+        });
+        return () => {
+            unsubscribeStore();
+        };
+    }, [])
+    console.log(StoreData)
+    const handlePress = (selectedItem) => {
+        navigation.navigate('ChiTietCuaHang', { data: selectedItem });
     }
-
-    // Danh sách các cửa hàng
-    const stores = [
-        { id: '1', name: 'Store 1', address: '123 ABC Street', distance: '1.2 km' },
-        { id: '2', name: 'Store 2', address: '456 XYZ Street', distance: '0.8 km' },
-        { id: '3', name: 'Store 3', address: '789 DEF Street', distance: '2.5 km' },
-        { id: '4', name: 'Store 4', address: '321 GHI Street', distance: '3.3 km' },
-        { id: '5', name: 'Store 5', address: '654 JKL Street', distance: '0.5 km' },
-        { id: '6', name: 'Store 6', address: '987 MNO Street', distance: '2.9 km' },
-        { id: '7', name: 'Store 7', address: '654 PQR Street', distance: '1.8 km' },
-    ];
-
-    // Hàm render cho mỗi mục cửa hàng
-    const renderStore = ({ item }) => (
-        <TouchableOpacity onPress={handlePress}>
-            <StoreCard store={item}></StoreCard>
-        </TouchableOpacity>
-    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -65,8 +62,12 @@ function DSCuaHang({ navigation }): React.JSX.Element {
             <View style={styles.footer}>
                 <Text style={styles.textTitleFooter}>Các cửa hàng khác</Text>
                 <FlatList
-                    data={stores}
-                    renderItem={renderStore}
+                    data={StoreData}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => handlePress(item)}>
+                            <StoreCard item={item} />
+                        </TouchableOpacity>
+                        )}
                     keyExtractor={(item) => item.id}
                 />
             </View>

@@ -5,7 +5,7 @@ const window = Dimensions.get('window');
 
 function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
 
-    const { name } = route.params;
+    const { data } = route.params;
     const handlePress = () => {
         navigation.goBack()
     }
@@ -15,29 +15,27 @@ function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
     return (
         <View style={styles.container}>
             <ScrollView>
-                <ScrollView
+                {/* <ScrollView
                     horizontal
-                    showsHorizontalScrollIndicator={false}>
-                    <Image source={require('../images/location1.jpg')} style={styles.imageLocation}></Image>
-                    <Image source={require('../images/location2.jpg')} style={styles.imageLocation}></Image>
-                    <Image source={require('../images/location3.jpg')} style={styles.imageLocation}></Image>
-                </ScrollView>
+                    showsHorizontalScrollIndicator={false}> */}
+                <Image source={{uri: data.ImageSource}} style={styles.imageLocation}></Image>
+                {/* </ScrollView> */}
                 <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }} onPress={handlePress}>
                     <Image source={require('../images/back.png')}
                         style={styles.icon} />
                 </TouchableOpacity>
                 <View>
                     <View style={styles.sectionText}>
-                        <Text style={styles.textName}>{name}</Text>
-                        <Text style={styles.textAddress}>HCM ĐƯỜNG D1</Text>
-                        <Text style={styles.text}>Giờ mở cửa: 07:00 - 18:00</Text>
+                        <Text style={styles.textName}>{data.Name}</Text>
+                        <Text style={styles.textStreet}>{data.Street}</Text>
+                        <Text style={styles.text}>Giờ mở cửa: {data.OpenTime}</Text>
                     </View>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button}>
                         <Image source={require('../images/maps.png')}
                             style={styles.icon} />
-                        <Text style={styles.buttonText}>281 Lê Văn Sỹ, Quận Tân Bình, Hồ Chí Minh</Text>
+                        <Text style={styles.buttonText}>{data.Address}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
                         <Image source={require('../images/favorite.png')}
@@ -74,14 +72,12 @@ const styles = StyleSheet.create({
         height: 400,
         borderRadius: 2,
         resizeMode: "stretch",
-        marginLeft: 2,
-        marginRight: 2
     },
     textName: {
         fontSize: 15,
         fontWeight: '600',
     },
-    textAddress: {
+    textStreet: {
         fontSize: 20,
         color: 'black',
         fontWeight: '700',
