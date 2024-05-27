@@ -141,9 +141,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#555',
     },
-    moreText: {
-        color: 'orange',
-    },
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
