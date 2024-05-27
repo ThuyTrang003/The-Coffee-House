@@ -5,13 +5,20 @@ const window = Dimensions.get('window');
 
 function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
 
-    const { data } = route.params;
+    const { data, user } = route.params;
     const handlePress = () => {
         navigation.goBack()
     }
     // const handlePressToHome = () => {
     //     navigation
     // }
+    const handlePressToMap = () => {
+        navigation.navigate('MapScreen', { data: data });
+      };
+
+      const handlePressToCart = () => {
+        navigation.navigate('GioHang', {user: user});
+      };
     return (
         <View style={styles.container}>
             <ScrollView>
@@ -32,7 +39,7 @@ function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
                     </View>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={handlePressToMap}>
                         <Image source={require('../images/maps.png')}
                             style={styles.icon} />
                         <Text style={styles.buttonText}>{data.Address}</Text>
@@ -54,7 +61,7 @@ function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.orderButton} >
+            <TouchableOpacity style={styles.orderButton} onPress={handlePressToCart} >
                 <Text style={styles.orderButtonText}>Đặt sản phẩm</Text>
                 <Text style={styles.orderButtonTextSmall}>Tự đến lấy tại cửa hàng này</Text>
             </TouchableOpacity>

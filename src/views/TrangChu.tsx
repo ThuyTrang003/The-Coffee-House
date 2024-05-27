@@ -7,7 +7,7 @@ const window = Dimensions.get('window');
 function TrangChu({ navigation, route }) {
     const {user, goBack} = route.params;
     const [value, setFindText] = useState("");
-    const [selectedDrink, setSelectedDrink] = useState('Cappucchino');
+    const [selectedDrink, setSelectedDrink] = useState('Cà Phê');
     const handleFind = (text) => {
         setFindText(text);
     }
@@ -28,7 +28,7 @@ function TrangChu({ navigation, route }) {
         const unsubscribeCoffee = coffeeDataQry.onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // Thêm id từ document id của Firebase
+                id: doc.id, 
             }));
             setCoffeeData(data);
         });
@@ -36,7 +36,7 @@ function TrangChu({ navigation, route }) {
         const unsubscribeTea = teaDataQry.onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // Thêm id từ document id của Firebase
+                id: doc.id, 
             }));
             setTeaData(data);
         });
@@ -44,7 +44,7 @@ function TrangChu({ navigation, route }) {
         const unsubscribeJuice = juiceDataQry.onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // Thêm id từ document id của Firebase
+                id: doc.id,
             }));
             setJuiceData(data);
         });
@@ -68,15 +68,17 @@ function TrangChu({ navigation, route }) {
     const handlePress = (selectedItem) => {
         navigation.navigate('ChiTietSanPham', { data: selectedItem, user: user });
     };
-
+    const handlePressToProfile = () => {
+        navigation.navigate('ProfileUser', {user: user });
+    };
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.spaceIconHeader}>
-                    <TouchableOpacity>
-                        <Image source={require('../images/category.png')} style={styles.icon}></Image>
+                    <TouchableOpacity onPress={handleBackLogin}>
+                        <Image source={require('../images/logout.png')} style={styles.icon}></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleBackLogin()}>
+                    <TouchableOpacity onPress={() => handlePressToProfile()}>
                         <Image source={require('../images/user.png')} style={styles.icon}></Image>
                     </TouchableOpacity>
                 </View>

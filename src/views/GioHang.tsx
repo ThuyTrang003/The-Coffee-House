@@ -1,208 +1,156 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import Modal from 'react-native-modal';
-import { ScrollView } from 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Dropdown } from 'react-native-element-dropdown';
+import { firebase } from '../firebase/FirebaseConfig';
+import UserCartCard from '../component/UserCartCard';
 
 const screenWidth = Dimensions.get('window').width;
 
+function GioHang({ route }): React.JSX.Element {
+    const { user } = route.params;
+    const [cartData, setCartData] = useState(null);
+    const [cartAllData, setCartAllData] = useState(null);
+    const [CoffeeData, setCoffeeData] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedSize, setSelectedSize] = useState('S');
+    const [count, setCount] = useState(0);
 
-function GioHang(): React.JSX.Element {
-
-    const [openModal, setOpenModal] = React.useState(false);
+    const cartDataHandler = async () => {
+        const docref = firebase.firestore().collection('UserCart').doc(user.uid);
+        try {
+            const doc = await docref.get();
+            if (doc.exists) {
+                setCartData(doc.data());
+                setCartAllData(doc.data().cartItems);
+            } else {
+                console.log('There is no data');
+            }
+        } catch (error) {
+            console.log('Error fetching cart data:', error);
+        }
+    };
+    useEffect(() => {
+        cartDataHandler();
+    }, []);
+    console.log(cartAllData)
+    const CoffeeDataHandle = async () => {
+        const docref = firebase.firestore().collection('CoffeeData');
+        try {
+            await docref.get().then((doc) => {
+                if (doc.exists) {
+                    setCoffeeData(doc.data());
+                } else {
+                    console.log('There is no data');
+                }
+            })
+        } catch (error) {
+            console.log('Error fetching cart data:', error);
+        }
+    };
+    useEffect(() => {
+        CoffeeDataHandle();
+    }, []);
     const toggleModalShipping = () => {
         setOpenModal(!openModal);
     };
-    const [optionModel, setOptionModel] = React.useState(1);
-
-    // biến cho size
-    const sizes = [
-        { label: 'S', value: 'S' },
-        { label: 'M', value: 'M' },
-        { label: 'L', value: 'L' },
-    ];
-    const [openSize, setOpenSize] = useState(false);
-    const [selectedSize, setSelectedSize] = useState('S');
 
     const selectSize = (option: any) => {
         setSelectedSize(option);
-        setOpenSize(false);
     };
-    //biến cho số lượng
-    const [count, setCount] = useState(0);
 
     const increaseCount = () => {
         setCount(count + 1);
     };
+
     const decreaseCount = () => {
-        if (count > 1)
+        if (count > 1) {
             setCount(count - 1);
+        }
     };
-    //modal giao hàng
-    function renderModal() {
-        return (
-            <Modal
-                isVisible={openModal}
-                onBackdropPress={toggleModalShipping}
-                style={styles.modal}
-                backdropTransitionOutTiming={0}
-            >
-                <View style={styles.modalContent}>
-                    <View style={styles.phuongThucDatHang}>
-                        <TouchableOpacity
-                            onPress={toggleModalShipping}
-                        >
-                            <Image source={require('../images/reject_black.png')}
-                                style={{ height: 20, width: 20, position: 'relative', left: screenWidth - 60 }} />
-                        </TouchableOpacity>
 
-                        <Text style={[styles.fontWeight, { fontSize: 14, color: 'black', marginLeft: 50 }]}>
-                            Phương thức lấy hàng</Text>
+    const renderItem = ({ item }) => (
+        <UserCartCard
+            data={item}
+        />
+    );
 
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={toggleModalShipping}>
-                        <View style={[styles.item]}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Image source={require('../images/edit.png')}
-                                    style={{ height: 17, width: 17, marginRight: 10 }} />
-                                <View style={[styles.categoryInfor]}>
-                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                        Giao hàng</Text>
-                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
-                                        Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà</Text>
-
-                                </View>
-                            </View>
-                            <TouchableOpacity
-
-                                style={[styles.button1]}>
-
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Sửa</Text>
-                            </TouchableOpacity>
-                        </View>
+    const renderModal = () => (
+        <Modal
+            isVisible={openModal}
+            onBackdropPress={toggleModalShipping}
+            style={styles.modal}
+            backdropTransitionOutTiming={0}
+        >
+            <View style={styles.modalContent}>
+                <View style={styles.phuongThucDatHang}>
+                    <TouchableOpacity onPress={toggleModalShipping}>
+                        <Image
+                            source={require('../images/reject_black.png')}
+                            style={{ height: 20, width: 20, position: 'relative', left: screenWidth - 60 }}
+                        />
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={toggleModalShipping}>
-                        <View style={styles.item}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Image source={require('../images/edit.png')}
-                                    style={{ height: 17, width: 17, marginRight: 10 }} />
-                                <View style={[styles.categoryInfor]}>
-                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                        Mang đi</Text>
-                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
-                                        Địa chỉ quán Địa chỉ quán Địa chỉiii quán Địa chỉ quán </Text>
-
-                                </View>
-                            </View>
-                            <TouchableOpacity
-                                style={[styles.button1]}>
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Sửa</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
+                    <Text style={[styles.fontWeight, { fontSize: 14, color: 'black', marginLeft: 50 }]}>
+                        Phương thức lấy hàng
+                    </Text>
                 </View>
-            </Modal>
-        )
-    }
 
-    //hàm chính
+                <TouchableOpacity onPress={toggleModalShipping}>
+                    <View style={[styles.item]}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image source={require('../images/edit.png')} style={{ height: 17, width: 17, marginRight: 10 }} />
+                            <View style={[styles.categoryInfor]}>
+                                <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
+                                    Giao hàng
+                                </Text>
+                                <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
+                                    Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà
+                                </Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity style={[styles.button1]}>
+                            <Text style={{ fontSize: 12, color: 'black' }}>Sửa</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={toggleModalShipping}>
+                    <View style={styles.item}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image source={require('../images/edit.png')} style={{ height: 17, width: 17, marginRight: 10 }} />
+                            <View style={[styles.categoryInfor]}>
+                                <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
+                                    Mang đi
+                                </Text>
+                                <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
+                                    Địa chỉ quán Địa chỉ quán Địa chỉiii quán Địa chỉ quán
+                                </Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity style={[styles.button1]}>
+                            <Text style={{ fontSize: 12, color: 'black' }}>Sửa</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </Modal>
+    );
+
     return (
         <View style={styles.background}>
+
             <View style={styles.header}>
-                <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray'}]}>
-                    Xóa</Text>
                 <Text style={[styles.fontWeight, { fontSize: 15, color: 'black', marginLeft: (screenWidth - 230) / 2 }]}>
-                    Xác nhận đơn hàng</Text>
+                    Đơn hàng của tôi
+                </Text>
             </View>
-            <GestureHandlerRootView style={{ flex: 8 }}>
-                <ScrollView>
-                    <View style={styles.titleComponent}>
-                        <View style={styles.component}>
-                            <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
-                                Phương thức lấy hàng</Text>
-                            <TouchableOpacity
-                                onPress={() => setOpenModal(true)}
-                                style={[styles.button1]}>
-
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Thay đổi</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.titleComponent}>
-                        <View style={styles.component}>
-                            <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
-                                Sản phẩm đã chọn</Text>
-                            <TouchableOpacity style={[styles.button1]}>
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    + Thêm</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={[styles.item]}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity>
-                                    <Image source={require('../images/bin.png')}
-                                        style={{ height: 17, width: 17, marginRight: 10 }} />
-                                </TouchableOpacity>
-                                <View>
-                                    <View style={[styles.categoryInfor]}>
-                                        <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                            Olong Tứ Quý Vải</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Dropdown
-                                            style={[styles.dropdown, {}]}
-                                            placeholderStyle={styles.placeholderStyle}
-                                            selectedTextStyle={styles.selectedTextStyle}
-                                            itemTextStyle={styles.itemTextStyle}
-                                            iconStyle={styles.iconStyle}
-                                            data={sizes}
-                                            labelField="label"
-                                            valueField="value"
-                                            placeholder="S" // lấy thông tin
-                                            value={selectedSize}
-                                            onChange={item => {
-                                                selectSize(item.value);
-                                            }}
-                                        />
-                                        {/* số lượng */}
-                                        <View style={[styles.quantityButton]} >
-                                            <TouchableOpacity
-                                                onPress={decreaseCount}>
-                                                <Image source={require('../images/minus.png')}
-                                                    style={{ height: 13, width: 15 }} />
-
-                                            </TouchableOpacity>
-
-                                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                                {count}</Text>
-
-                                            <TouchableOpacity
-                                                onPress={increaseCount}>
-                                                <Image source={require('../images/plus1.png')}
-                                                    style={{ height: 13, width: 15 }} />
-
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                            <Text style={{ fontSize: 12, color: 'black', marginBottom: 10 }}>
-                                85.000đ</Text>
-                        </View>
-                    </View>
-                </ScrollView>
-            </GestureHandlerRootView>
-            <View style={[styles.totalPay]}>
-                <View style={[styles.component]}>
+            <FlatList
+                data={cartAllData}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+            />
+            <View style={styles.totalPay}>
+                <View style={styles.component}>
                     <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
                         Tổng tiền
                     </Text>
@@ -210,9 +158,10 @@ function GioHang(): React.JSX.Element {
                         300.000đ
                     </Text>
                 </View>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity style={styles.button}>
                     <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
-                        Đặt hàng</Text>
+                        Đặt hàng
+                    </Text>
                 </TouchableOpacity>
             </View>
             {renderModal()}
@@ -263,9 +212,6 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingTop: 10,
     },
-    editComponent: {
-
-    },
     categoryInfor: {
         width: (screenWidth) / 5 * 3,
         marginBottom: 10,
@@ -294,7 +240,6 @@ const styles = StyleSheet.create({
         padding: 20,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        //height: Dimensions.get('window').height * 0.4,
     },
     phuongThucDatHang: {
         flexDirection: 'row',
@@ -346,7 +291,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginLeft: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
 });
 
