@@ -1,6 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { Button, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../theme/theme";
-import React, { useState } from "react";
 import { RadioButton } from "react-native-paper";
 
 const window = Dimensions.get('window');
@@ -8,13 +7,12 @@ const window = Dimensions.get('window');
 function ChiTietSanPham({ navigation, route }) {
     const { data } = route.params;
     const [quantity, setQuantity] = useState(1);
-    const [selectedSize, setSelectedSize] = useState('Lớn');
-    const prices: { [key: string]: number } = {
-        'Lớn': 65000,
-        'Vừa': 59000,
-        'Nhỏ': 49000,
-    };
+    const [selectedSize, setSelectedSize] = useState('SizeSmall');
 
+    useEffect(() => {
+        // Reset số lượng về 1 khi chọn size khác
+        setQuantity(1);
+    }, [selectedSize]);
 
     const increaseQuantity = () => {
         setQuantity(quantity + 1);
@@ -30,12 +28,44 @@ function ChiTietSanPham({ navigation, route }) {
         navigation.goBack();
     };
 
+    const getPriceBySize = (size) => {
+        switch (size) {
+            case 'SizeSmall':
+                return data.Price.SizeSmall;
+            case 'SizeMedium':
+                return data.Price.SizeMedium;
+            case 'SizeLarge':
+                return data.Price.SizeLarge;
+            default:
+                return 0; // Hoặc giá mặc định nếu không tìm thấy
+        }
+    };
+
+    const getTotalPrice = () => {
+        const selectedPrice = getPriceBySize(selectedSize);
+        return selectedPrice ? selectedPrice * quantity : 0;
+    };
+    
+
+    const mapSizeToDisplayValue = (size) => {
+        switch (size) {
+            case 'SizeSmall':
+                return 'Nhỏ';
+            case 'SizeMedium':
+                return 'Vừa';
+            case 'SizeLarge':
+                return 'Lớn';
+            default:
+                return size;
+        }
+    };
+    
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.ScrollViewFlex}>
-                <Image source={require('../images/coffee.png')} style={styles.image} />
+                <Image source={{ uri: data.ImageSource }} style={styles.image} />
                 <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }} onPress={handlePress}>
                     <Image source={require('../images/back.png')} style={{ height: 30, width: 30 }} />
                 </TouchableOpacity>
@@ -43,26 +73,22 @@ function ChiTietSanPham({ navigation, route }) {
                     <Image source={require('../images/favorite.png')} style={{ height: 30, width: 30 }} />
                 </TouchableOpacity>
                 <View style={styles.detailsContainer}>
-                    <Text style={styles.productName}>{data[0].name}</Text>
-                    <Text style={styles.price}>{prices[selectedSize].toLocaleString()}đ</Text>
-                    <Text style={styles.description}>
-                        {data[0].des} <Text style={styles.moreText}>Xem thêm</Text>
-                    </Text>
+                    <Text style={styles.productName}>{data.Name}</Text>
+                    <Text style={styles.price}>{getPriceBySize(selectedSize).toLocaleString()}đ</Text>
+                    <Text style={styles.description}>{data.LongDescription}</Text>
 
                     <Text style={styles.sectionTitle}>Size</Text>
                     <RadioButton.Group onValueChange={newValue => setSelectedSize(newValue)} value={selectedSize}>
-                        {['Lớn', 'Vừa', 'Nhỏ'].map((size) => (
-                            <View key={size} style={styles.sizeOption}>
+                        {['SizeSmall', 'SizeMedium', 'SizeLarge'].map((size, index) => (
+                            <View key={index} style={styles.sizeOption}>
                                 <RadioButton value={size} />
                                 <View style={styles.sizeLabelContainer}>
-                                    <Text style={styles.sizeText}>{size}</Text>
-                                    <Text style={styles.sizePrice}>{prices[size].toLocaleString()}đ</Text>
+                                    <Text style={styles.sizeText}>{mapSizeToDisplayValue(size)}</Text>
+                                    <Text style={styles.sizePrice}>{getPriceBySize(size).toLocaleString()}đ</Text>
                                 </View>
                             </View>
                         ))}
                     </RadioButton.Group>
-
-
                 </View>
             </ScrollView>
             <View style={styles.payment}>
@@ -76,7 +102,7 @@ function ChiTietSanPham({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.orderButton}>
-                    <Text style={styles.orderButtonText}>Chọn • {(prices[selectedSize] * quantity).toLocaleString()}đ</Text>
+                    <Text style={styles.orderButtonText}>Chọn • {(getTotalPrice()).toLocaleString()}đ</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -160,7 +186,7 @@ const styles = StyleSheet.create({
     quantityButtonText: {
         fontSize: 20,
         color: '#e47907',
-        
+
     },
     quantityText: {
         fontSize: 20,

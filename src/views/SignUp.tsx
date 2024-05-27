@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpa
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
+import {firebase} from '../firebase/FirebaseConfig';
 // xử lý nút Sign up, nút x, nút sign in
 // bàn phím nhập pass che
 
@@ -25,7 +26,7 @@ function comparePass(pass: string, cfPass: string): React.JSX.Element | null {
 
 }
 
-function SignUp(): React.JSX.Element {
+function SignUp({navigation}): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,10 +35,30 @@ function SignUp(): React.JSX.Element {
     const [hidePass, setHidePass] = useState(true);
     const [hideCfPass, setHideCfPass] = useState(true);
 
+    const createAccountHandle = async () => {
+        // if(!email || !password || !confirmPass){
+        //     alert('Chưa điền đủ thông tin!')
+        //     return;
+        // }
+        try {
+            await firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredentials) => {
+                    const uid = userCredentials?.user?.uid;
+                    console.log('Tạo tài khoản thành công')
+            })
+        } catch (error){
+            console.log('Error...')
+        }
+    }
+
+    const handlePress = () => {
+        navigation.goBack();
+    };
+
     return (
         <ImageBackground style={styles.background}
             source={require('../images/loginBackground.jpg')} >
-            <TouchableOpacity style={{ position: 'absolute', top: 10, left: screenWidth - 30 }}>
+            <TouchableOpacity style={{ position: 'absolute', top: 10, left: screenWidth - 30 }} onPress={() => handlePress()}>
                 <Image source={require('../images/reject.png')}
                     style={{ height: 20, width: 20 }} />
             </TouchableOpacity>
@@ -96,14 +117,14 @@ function SignUp(): React.JSX.Element {
 
                                 {comparePass(password, confirmPass)}
 
-                                <TouchableOpacity style={[styles.button]}>
+                                <TouchableOpacity style={[styles.button]} onPress={() => createAccountHandle()}>
                                     <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
                                         Sign up</Text>
                                 </TouchableOpacity>
                                 <View style={styles.component1}>
                                     <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
                                         Already have an account? </Text>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handlePress()}>
                                         <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
                                             Sign in</Text>
                                     </TouchableOpacity>
@@ -183,3 +204,7 @@ const styles = StyleSheet.create({
 });
 
 export default SignUp;
+function userCredentials(value: UserCredential): UserCredential | PromiseLike<UserCredential> {
+    throw new Error('Function not implemented.');
+}
+

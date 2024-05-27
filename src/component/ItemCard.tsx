@@ -9,21 +9,21 @@ const ItemCard = ({ item }) => {
         <View style={styles.boxContainer}>
             <TouchableOpacity>
                 <ImageBackground
-                    source={require('../images/coffee.png')}
+                    source={{ uri: item.ImageSource }}
                     style={styles.imageBackground}
                     resizeMode="cover">
                     <View style={styles.CardRatingContainer}>
-                        <Text style={styles.CardRatingText}>⭐ {item.rating}</Text>
+                        <Text style={styles.CardRatingText}>⭐ {item.Rating}</Text>
                     </View>
                 </ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Text style={styles.CardTitle}>{item.name}</Text>
-                <Text style={styles.CardSubtitle}>{item.description}</Text>
+                <Text style={styles.CardTitle}>{item.Name}</Text>
+                <Text style={styles.CardSubtitle}>{item.ShortDescription}</Text>
             </TouchableOpacity>
             <View style={styles.CardFooterRow}>
                 <Text style={styles.CardPriceCurrency}>
-                    <Text style={styles.CardPrice}>{item.prices.medium}đ</Text>
+                    <Text style={styles.CardPrice}>{item.Price.SizeMedium.toLocaleString()}đ</Text>
                 </Text>
                 <TouchableOpacity>
                     <Image source={require('../images/plus.png')} style={styles.iconStyle}></Image>

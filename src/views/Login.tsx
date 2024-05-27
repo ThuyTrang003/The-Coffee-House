@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { firebase } from '../firebase/FirebaseConfig'
 
-// bàn phím nhập pass che
-// xử lý nút login, nút x, nút forgot your password, nút signup
-function Login(): React.JSX.Element {
+function Login({ navigation }): React.JSX.Element {
     const screenWidth = Dimensions.get('window').width;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -15,67 +14,87 @@ function Login(): React.JSX.Element {
         }
         else setHidePass(false);
     }
-    return (
-        <ImageBackground style={styles.background}
-            source={require('../images/loginBackground.jpg')} >
-            <TouchableOpacity style={{ position: 'absolute', top: 10, left: screenWidth - 30 }}>
-                <Image source={require('../images/reject.png')}
-                    style={{ height: 20, width: 20 }} />
-            </TouchableOpacity>
+    const LoginHandlerToSignUp = () => {
+        navigation.navigate('SignUp');
+    }
+    const LoginHandlerToManage = async () => {
+        if (email !== '' && password !== '') {
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                if (user) {
+                    console.log('UID của User:', user.uid);
+                    // Navigate to TrangChu and pass user information
+                    navigation.navigate('Manage', { user: user });
+                }
+            } catch (error) {
+                console.log('Error...', error);
+            }
+        } else {
+            console.log('Email and Password cannot be empty');
+        }
+    }
+return (
+    <ImageBackground style={styles.background}
+        source={require('../images/loginBackground.jpg')} >
+        <TouchableOpacity style={{ position: 'absolute', top: 10, left: screenWidth - 30 }}>
+            <Image source={require('../images/reject.png')}
+                style={{ height: 20, width: 20 }} />
+        </TouchableOpacity>
 
-            <View style={styles.mainView}>
-                <View style={styles.items}>
-                    <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
-                        Chào mừng bạn đến với</Text>
-                    <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 20 }]}>
-                        THE COFFEE HOUSE</Text>
-                    <View style={[styles.textBox]}>
-                        <TextInput
-                            keyboardType='email-address'
-                            placeholder='Email'
-                            style={styles.textInput}
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                        />
-                    </View>
-                    <View style={[styles.textBox]}>
-                        <TextInput
-                            secureTextEntry={hidePass}
-                            placeholder='Password'
-                            style={styles.textInput}
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                        />
-                        <TouchableOpacity style={{ padding: 8 }} onPress={onPressHide}>
-                            <Image source={require('../images/visible.png')}
-                                style={{ height: 20, width: 20 }} />
-                        </TouchableOpacity>
-                    </View>
-
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                        <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'gray', marginTop: 5 }]}>
-                            Forgot your password?</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.button]}>
-                        <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
-                            Login</Text>
-                    </TouchableOpacity>
-                    <View style={styles.component1}>
-                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
-                            Don't have an account? </Text>
-                        <TouchableOpacity>
-                            <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
-                                Sign up</Text>
-                        </TouchableOpacity>
-                    </View>
-
+        <View style={styles.mainView}>
+            <View style={styles.items}>
+                <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'black', marginTop: 5 }]}>
+                    Chào mừng bạn đến với</Text>
+                <Text style={[styles.fontWeight, { fontSize: 17, color: 'black', marginTop: 5, marginBottom: 20 }]}>
+                    THE COFFEE HOUSE</Text>
+                <View style={[styles.textBox]}>
+                    <TextInput
+                        keyboardType='email-address'
+                        placeholder='Email'
+                        style={styles.textInput}
+                        value={email}
+                        onChangeText={(text) => setEmail(text)}
+                    />
                 </View>
+                <View style={[styles.textBox]}>
+                    <TextInput
+                        secureTextEntry={hidePass}
+                        placeholder='Password'
+                        style={styles.textInput}
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
+                    />
+                    <TouchableOpacity style={{ padding: 8 }} onPress={onPressHide}>
+                        <Image source={require('../images/visible.png')}
+                            style={{ height: 20, width: 20 }} />
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
+                    <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'gray', marginTop: 5 }]}>
+                        Forgot your password?</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.button]} onPress={() => LoginHandlerToManage()}>
+                    <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
+                        Login</Text>
+                </TouchableOpacity>
+                <View style={styles.component1}>
+                    <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
+                        Don't have an account? </Text>
+                    <TouchableOpacity onPress={() => LoginHandlerToSignUp()}>
+                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'black' }]}>
+                            Sign up</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
-        </ImageBackground>
+        </View>
+    </ImageBackground>
 
 
-    );
+);
 }
 
 const styles = StyleSheet.create({
