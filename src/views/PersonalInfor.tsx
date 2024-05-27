@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Button, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dropdown } from 'react-native-element-dropdown';
-//import DateTimePicker from '@react-native-community/datetimepicker';
-//1 component hoạt động, các component khác bị vô hiệu hóa
-//trạng thái của button tạo tài khoản khi chưa thực hiện xong
+
 const screenWidth = Dimensions.get('window').width;
 
 function tickButton(tick: boolean): React.JSX.Element {
@@ -18,43 +16,44 @@ function tickButton(tick: boolean): React.JSX.Element {
             <Image source={require('../images/check-box.png')}
                 style={{ height: 17, width: 17, marginRight: 7 }} />)
 }
+const isValideSdt = (value: string) => {
+    const re = /^(?:\+84|0)(?:[3|5|7|8|9])[0-9]{8,9}$/;
+    return re.test(value);
+}
+function validateSdtComponent(value: string): React.JSX.Element | null {
+    const re = /^(?:\+84|0)(?:[3|5|7|8|9])[0-9]{8,9}$/;
+    if (re.test(value) == false) {
+        return (
+            <Text style={styles.ErrorMessage}>
+                Số điện thoại không hợp lệ!</Text>
+        );
+    }
+    else return null;
+}
 
 function PersonalInfor(): React.JSX.Element {
 
     const [tick, setTick] = useState(false);
-    const [ho, setHo] = useState('');
     const [ten, setTen] = useState('');
     const [sdt, setSdt] = useState('');
-
-    const days = Array.from({ length: 31 }, (_, index) => index + 1);
-    const months = Array.from({ length: 12 }, (_, index) => index + 1);
+    const [isValid, setIsValid] = useState(false);
     const genders = [
         { value: 'Nam' },
         { value: 'Nữ' }
     ];
 
-    const [day, setDay] = useState(null);
-    const [month, setMonth] = useState('Tháng sinh');
-    const [gender, setGender] = useState('Chưa chọn giới tính');
-
+    const [gender, setGender] = useState('');
     const [openGenderDrop, setOpenGenderDrop] = useState(false);
     const selectGender = (option: any) => {
         setGender(option);
         setOpenGenderDrop(false);
     }
-    //datetime
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
-    const toggleDatePicker = () => {
-        setShowPicker(!showPicker);
-    }
-    const onChange = (event: any, selectedDate?: Date) => {
-        const currentDate = selectedDate || date;
-        setShowPicker(false);
-        setDate(currentDate);
-    };
-
+    useEffect(() => {
+        if (ten && isValideSdt(sdt) == true && gender && tick == true)
+            setIsValid(true);
+        else
+            setIsValid(false);
+    }, [ten, gender, sdt, tick]);
 
     return (
         <View style={styles.background}>
@@ -68,18 +67,10 @@ function PersonalInfor(): React.JSX.Element {
             <View style={styles.mainView}>
                 <View style={[styles.textBox]}>
                     <TextInput
-                        placeholder='Nhập tên của bạn *'
+                        placeholder='Nhập họ và tên của bạn'
                         style={styles.textInput}
                         value={ten}
                         onChangeText={(text) => setTen(text)}
-                    />
-                </View>
-                <View style={[styles.textBox]}>
-                    <TextInput
-                        placeholder='Nhập họ của bạn'
-                        style={styles.textInput}
-                        value={ho}
-                        onChangeText={(text) => setHo(text)}
                     />
                 </View>
                 <View style={[styles.textBox]}>
@@ -91,67 +82,8 @@ function PersonalInfor(): React.JSX.Element {
                         onChangeText={(text) => setSdt(text)}
                     />
                 </View>
+                {validateSdtComponent(sdt)}
 
-                <View style={[styles.birthday]}>
-                    {/* <View>
-                        <TouchableOpacity
-                            onPress={() => setShowOptionsMonth(!showOptionsMonth)}
-                            style={[styles.birthdayButton, { marginRight: 18 }]}>
-                            <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'black', marginLeft: 10 }]}>
-                                {month}</Text>
-                            <Image source={require('../images/down-arrow.png')}
-                                style={{ height: 20, width: 20, marginRight: 10 }} />
-                        </TouchableOpacity>
-                        {showOptionsMonth && (
-                            <GestureHandlerRootView style={styles.birthOptions}>
-                                <ScrollView style={styles.scrollView}>
-                                    {months.map((option) => (
-                                        <TouchableOpacity
-                                            key={option}
-                                            style={[styles.option]}
-                                            onPress={() => {
-                                                setMonth('Tháng ' + option.toString());
-                                                setShowOptionsMonth(!showOptionsMonth);
-                                            }}
-
-                                        >
-
-                                            <Text style={[styles.optionText]}>{option}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                            </GestureHandlerRootView>
-                        )}
-                    </View> */}
-
-                    {/* <View>
-                        <TouchableOpacity
-                            onPress={() => setShowOptionsDay(!showOptionsDay)}
-                            style={styles.birthdayButton}>
-                            <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'black', marginLeft: 10 }]}>
-                                {day}</Text>
-                            <Image source={require('../images/down-arrow.png')}
-                                style={{ height: 20, width: 20, marginRight: 10 }} />
-                        </TouchableOpacity>
-                        {showOptionsDay && (
-                            <GestureHandlerRootView style={[styles.birthOptions]}
-                                >
-                                <ScrollView style={styles.scrollView}>
-                                    {days.map((option) => (
-                                        <TouchableOpacity
-                                            key={option}
-                                            style={[styles.option]}
-                                            onPress={() => { setDay('Ngày ' + option.toString()); setShowOptionsDay(!showOptionsDay); }}
-                                        >
-                                            <Text style={[styles.optionText]}>{option}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                            </GestureHandlerRootView>
-                        )}
-                    </View> */}
-
-                </View>
                 <Dropdown
                     style={[styles.dropdown]}
                     placeholderStyle={styles.placeholderStyle}
@@ -175,15 +107,16 @@ function PersonalInfor(): React.JSX.Element {
                     <Text style={[styles.fontWeightLight, { fontSize: 13, color: '#5F374B', marginLeft: 10 }]}>
                         Tôi đồng ý với các Điều khoản và điều kiện của The Coffee House </Text>
                 </View>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity
+                    style={[isValid ? styles.buttonValid : styles.buttonInvalid]}
+                    disabled={!isValid}
+                >
                     <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
                         Tạo tài khoản</Text>
                 </TouchableOpacity>
 
             </View >
         </View >
-
-
     );
 }
 
@@ -270,11 +203,20 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: 'black',
     },
-    button: {
+    buttonValid: {
         marginTop: 20,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#5F374B',
+        borderRadius: 8,
+        width: '100%',
+        height: 40,
+    },
+    buttonInvalid: {
+        marginTop: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'gray',
         borderRadius: 8,
         width: '100%',
         height: 40,
@@ -323,6 +265,12 @@ const styles = StyleSheet.create({
     itemTextStyle: {
         fontSize: 13,
         color: 'black',
+    },
+    ErrorMessage: {
+        fontSize: 10,
+        alignSelf: 'flex-end',
+        color: 'red',
+
     },
 });
 
