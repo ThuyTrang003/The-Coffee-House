@@ -13,6 +13,7 @@ import CuaHang from './src/views/CuaHang';
 import PersonalInfor from './src/views/PersonalInfor';
 import GioHang from './src/views/GioHang';
 import NavigatorLogin from './src/views/NavigatorLogin';
-AppRegistry.registerComponent(appName, () => NavigatorLogin);
+import favourite from './src/views/favourite';
+AppRegistry.registerComponent(appName, () => favourite);
 
 
