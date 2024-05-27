@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Button, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Dropdown } from 'react-native-element-dropdown';
+//import DateTimePicker from '@react-native-community/datetimepicker';
 //1 component hoạt động, các component khác bị vô hiệu hóa
 //trạng thái của button tạo tài khoản khi chưa thực hiện xong
 const screenWidth = Dimensions.get('window').width;
@@ -26,20 +28,32 @@ function PersonalInfor(): React.JSX.Element {
 
     const days = Array.from({ length: 31 }, (_, index) => index + 1);
     const months = Array.from({ length: 12 }, (_, index) => index + 1);
-    const genders = [{ value: 'Nam' }, { value: 'Nữ' }];
+    const genders = [
+        { value: 'Nam' },
+        { value: 'Nữ' }
+    ];
 
-    const [day, setDay] = useState('Ngày sinh');
+    const [day, setDay] = useState(null);
     const [month, setMonth] = useState('Tháng sinh');
     const [gender, setGender] = useState('Chưa chọn giới tính');
 
-    const [showOptionsDay, setShowOptionsDay] = useState(false);
-    const [showOptionsMonth, setShowOptionsMonth] = useState(false);
-    const [showOptionsGender, setShowOptionsGender] = useState(false);
-
-    // const [isDisabledDay, setIsDisabledDay] = useState(false);
-    // const [isDisabledMonth, setIsDisabledMonth] = useState(false);
-    // const [isDisabledGender, setIsDisabledGender] = useState(false);
-
+    const [openGenderDrop, setOpenGenderDrop] = useState(false);
+    const selectGender = (option: any) => {
+        setGender(option);
+        setOpenGenderDrop(false);
+    }
+    //datetime
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [showPicker, setShowPicker] = useState(false);
+    const toggleDatePicker = () => {
+        setShowPicker(!showPicker);
+    }
+    const onChange = (event: any, selectedDate?: Date) => {
+        const currentDate = selectedDate || date;
+        setShowPicker(false);
+        setDate(currentDate);
+    };
 
 
     return (
@@ -79,7 +93,7 @@ function PersonalInfor(): React.JSX.Element {
                 </View>
 
                 <View style={[styles.birthday]}>
-                    <View>
+                    {/* <View>
                         <TouchableOpacity
                             onPress={() => setShowOptionsMonth(!showOptionsMonth)}
                             style={[styles.birthdayButton, { marginRight: 18 }]}>
@@ -88,7 +102,7 @@ function PersonalInfor(): React.JSX.Element {
                             <Image source={require('../images/down-arrow.png')}
                                 style={{ height: 20, width: 20, marginRight: 10 }} />
                         </TouchableOpacity>
-                        {showOptionsMonth && ( 
+                        {showOptionsMonth && (
                             <GestureHandlerRootView style={styles.birthOptions}>
                                 <ScrollView style={styles.scrollView}>
                                     {months.map((option) => (
@@ -108,9 +122,9 @@ function PersonalInfor(): React.JSX.Element {
                                 </ScrollView>
                             </GestureHandlerRootView>
                         )}
-                    </View>
+                    </View> */}
 
-                    <View>
+                    {/* <View>
                         <TouchableOpacity
                             onPress={() => setShowOptionsDay(!showOptionsDay)}
                             style={styles.birthdayButton}>
@@ -135,31 +149,24 @@ function PersonalInfor(): React.JSX.Element {
                                 </ScrollView>
                             </GestureHandlerRootView>
                         )}
-                    </View>
+                    </View> */}
+
                 </View>
-                <View>
-                    <TouchableOpacity
-                        onPress={() => setShowOptionsGender(!showOptionsGender)}
-                        style={[styles.textBox, { position: 'relative' }]}>
-                        <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'black', marginLeft: 10 }]}>
-                            {gender}</Text>
-                        <Image source={require('../images/down-arrow.png')}
-                            style={{ height: 20, width: 20, marginRight: 10 }} />
-                    </TouchableOpacity>
-                    {showOptionsGender && (
-                        <GestureHandlerRootView style={[styles.genderOptions]}>
-                            {genders.map((option) => (
-                                <TouchableOpacity
-                                    key={option.value}
-                                    style={[styles.option]}
-                                    onPress={() => { setGender(option.value); setShowOptionsGender(!showOptionsGender); }}
-                                >
-                                    <Text style={[styles.optionText]}>{option.value}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </GestureHandlerRootView>
-                    )}
-                </View>
+                <Dropdown
+                    style={[styles.dropdown]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    iconStyle={styles.iconStyle}
+                    data={genders}
+                    labelField="value"
+                    valueField="value"
+                    placeholder="Chưa chọn giới tính"
+                    value={gender}
+                    onChange={item => {
+                        selectGender(item.value);
+                    }}
+                />
 
                 <View style={[styles.dieuKhoan]}>
                     <TouchableOpacity onPress={() => setTick(!tick)}>
@@ -291,6 +298,31 @@ const styles = StyleSheet.create({
     },
     selectedOptionContainer: {
         backgroundColor: 'lightblue',
+    },
+    dropdown: {
+        borderWidth: 0.5,
+        paddingHorizontal: 8,
+        marginTop: 15,
+        borderColor: 'black',
+        borderRadius: 8,
+        height: 45,
+        width: '100%',
+    },
+    placeholderStyle: {
+        fontSize: 13,
+        color: 'black',
+    },
+    selectedTextStyle: {
+        fontSize: 13,
+        color: 'black',
+    },
+    iconStyle: {
+        width: 25,
+        height: 25,
+    },
+    itemTextStyle: {
+        fontSize: 13,
+        color: 'black',
     },
 });
 
