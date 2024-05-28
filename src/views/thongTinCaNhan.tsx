@@ -23,15 +23,15 @@ function validateSdtComponent(value: string): React.JSX.Element | null {
 
 function thongTinCaNhan(): React.JSX.Element {
 
-    const [ten, setTen] = useState('');
-    const [sdt, setSdt] = useState('');
+    const [ten, setTen] = useState('Trương Nguyễn Thùy Trang'); //chỗ lấy dữ liệu tên
+    const [sdt, setSdt] = useState('0963331857'); //chỗ lấy dữ liệu sdt
     const [isValid, setIsValid] = useState(false);
     const genders = [
         { value: 'Nam' },
         { value: 'Nữ' }
     ];
 
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState('Nữ'); //chỗ lấy dữ liệu gender
     const [openGenderDrop, setOpenGenderDrop] = useState(false);
     const selectGender = (option: any) => {
         setGender(option);
@@ -49,12 +49,8 @@ function thongTinCaNhan(): React.JSX.Element {
             <View style={styles.header}>
                 <Image source={require('../images/left-arrow.png')}
                     style={{ height: 15, width: 15 }} />
-                <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
+                <Text style={[styles.fontWeight, { fontSize: 15, color: 'black', marginLeft: (screenWidth - 220) / 2 }]}>
                     Chỉnh sửa thông tin</Text>
-                <TouchableOpacity>
-                    <Text style={[styles.fontWeight, { fontSize: 15, color: '#BB8493' }]}>
-                        Lưu</Text>
-                </TouchableOpacity>
             </View>
 
             <View style={styles.mainView}>
@@ -97,7 +93,7 @@ function thongTinCaNhan(): React.JSX.Element {
                     disabled={!isValid}
                 >
                     <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
-                        Tạo tài khoản</Text>
+                        Cập nhật </Text>
                 </TouchableOpacity>
 
             </View >
@@ -114,7 +110,6 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         borderBottomColor: 'gray',
         borderBottomWidth: 1,
         paddingBottom: 10,
