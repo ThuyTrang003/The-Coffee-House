@@ -83,7 +83,7 @@ function TrangChu({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 10 }}>
-                    <Text style={styles.textTitle}>Chào bạn, hãy tìm kiếm{'\n'}lựa chọn tốt nhất cho mình nhé</Text>
+                    <Text style={styles.textTitle}>Chào bạn,{'\n'}Hãy tìm kiếm lựa chọn tốt nhất cho mình nhé !!</Text>
                 </View>
                 <View style={styles.boxFind}>
                     <TouchableOpacity>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     textTitle: {
-        fontSize: 28,
+        fontSize: 24,
         color: 'black',
         fontWeight: 'bold'
     },
