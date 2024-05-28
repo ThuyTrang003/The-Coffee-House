@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         color: COLORS.primaryDarkGreyHex,
         borderBottomWidth: 1,
-        borderBottomColor: '#ddd'
+        borderBottomColor: 'black'
     },
     statusContainer: {
         flexDirection: 'row',

@@ -3,9 +3,9 @@ import { Image, StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } 
 import { SafeAreaView } from "react-native-safe-area-context";
 import StoreCard from "../component/StoreCard";
 import {firebase} from "../firebase/FirebaseConfig"
-function DSCuaHang({ navigation }): React.JSX.Element {
+function DSCuaHang({ navigation, route }): React.JSX.Element {
     const [value, setFindText] = useState("");
-
+    const {user} = route.params;
     const [StoreData, setStoreData] = useState([])
     const storeDataQry = firebase.firestore().collection('StoreData')
     useEffect(() => {
@@ -22,7 +22,7 @@ function DSCuaHang({ navigation }): React.JSX.Element {
     }, [])
     console.log(StoreData)
     const handlePress = (selectedItem) => {
-        navigation.navigate('ChiTietCuaHang', { data: selectedItem });
+        navigation.navigate('ChiTietCuaHang', { data: selectedItem, user: user });
     }
 
     return (
