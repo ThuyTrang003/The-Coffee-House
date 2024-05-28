@@ -21,7 +21,7 @@ function validateSdtComponent(value: string): React.JSX.Element | null {
     else return null;
 }
 
-function PersonalInfor(): React.JSX.Element {
+function thongTinCaNhan(): React.JSX.Element {
 
     const [ten, setTen] = useState('');
     const [sdt, setSdt] = useState('');
@@ -222,4 +222,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PersonalInfor;
+export default thongTinCaNhan;

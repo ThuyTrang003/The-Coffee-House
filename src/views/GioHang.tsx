@@ -104,19 +104,19 @@ function GioHang(): React.JSX.Element {
         setOpenSize(false);
     };
     // tăng, giảm số lượng
-    const increaseCount = (id: string, newQuantity: number) => {
+    const increaseCount = (id: string, newQuantity: number, newPrice: number) => {
 
         setData(prevData =>
             prevData.map(item =>
-                item.id === id ? { ...item, quantity: newQuantity } : item
+                item.id === id ? { ...item, quantity: newQuantity, price:newPrice } : item
             )
         );
     };
-    const decreaseCount = (id: string, newQuantity: number) => {
+    const decreaseCount = (id: string, newQuantity: number, newPrice: number) => {
         if (newQuantity + 1 > 1) {
             setData(prevData =>
                 prevData.map(item =>
-                    item.id === id ? { ...item, quantity: newQuantity } : item
+                    item.id === id ? { ...item, quantity: newQuantity, price:newPrice } : item
                 )
             );
         }
@@ -125,9 +125,9 @@ function GioHang(): React.JSX.Element {
 
     //chứa dữ liệu của 1 item
     const [data, setData] = useState([
-        { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: '30000', quantity: 1 },
-        { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: '40000', quantity: 2 },
-        { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: '50000', quantity: 3 },
+        { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: 30000, quantity: 1 },
+        { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: 40000, quantity: 2 },
+        { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: 50000, quantity: 3 },
     ]);
     const renderItem = ({ item }) => (
 
@@ -168,32 +168,35 @@ function GioHang(): React.JSX.Element {
                         </View>
                         {/* số lượng */}
                         <View style={[styles.quantityButton]} >
-                            {/* <TouchableOpacity
-                                onPress={() => decreaseCount(item.id, item.quantity - 1)}
+                            <TouchableOpacity
+                                onPress={() => {decreaseCount(item.id, item.quantity - 1, (item.price-item.price/item.quantity));
+
+                                    console.log((item.price-item.price/item.quantity));
+                                }}
                             >
                                 <Image source={require('../images/minus.png')}
                                     style={{ height: 13, width: 15 }} />
 
-                            </TouchableOpacity> */}
-                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                SL: </Text>
+                            </TouchableOpacity>
+                            {/* <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
+                                SL: </Text> */}
                             <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
                                 {item.quantity}</Text>
 
-                            {/* <TouchableOpacity
-                                onPress={() => { increaseCount(item.id, item.quantity + 1) }}
+                            <TouchableOpacity
+                                onPress={() => { increaseCount(item.id, item.quantity + 1, (item.price+item.price/item.quantity)) }}
                             >
                                 <Image source={require('../images/plus1.png')}
                                     style={{ height: 13, width: 15 }} />
 
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </View>
             {/* tổng giá */}
             <Text style={{ fontSize: 14, color: 'black', marginBottom: 10 }}>
-                {item.price}</Text>
+                {item.price.toFixed(1)}đ</Text>
         </View>
     );
 
@@ -385,7 +388,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 8,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         marginLeft: 10,
         alignItems: 'center'
     },
