@@ -15,6 +15,6 @@ import GioHang from './src/views/GioHang';
 import NavigatorLogin from './src/views/NavigatorLogin';
 import favourite from './src/views/favourite';
 import thongTinCaNhan from './src/views/thongTinCaNhan';
-AppRegistry.registerComponent(appName, () => favourite);
+AppRegistry.registerComponent(appName, () => NavigatorLogin);
 
 
