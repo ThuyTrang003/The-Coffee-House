@@ -12,7 +12,7 @@ function DSCuaHang({ navigation, route }): React.JSX.Element {
         const unsubscribeStore = storeDataQry.onSnapshot(snapshot => {
             const data = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // Thêm id từ document id của Firebase
+                id: doc.id,
             }));
             setStoreData(data);
         });

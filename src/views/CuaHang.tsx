@@ -5,6 +5,7 @@ import ChiTietCuaHang from './ChiTietCuaHang';
 import { NavigationContainer } from "@react-navigation/native";
 import MapScreen from "./MapScreen";
 import GioHang from "./GioHang";
+import TrangChu from "./TrangChu";
 
 const StoreStack = createStackNavigator();
 
@@ -17,10 +18,6 @@ function CuaHang({route}): React.JSX.Element {
                     component={DanhSachCuaHang} />
                 <StoreStack.Screen name="ChiTietCuaHang" 
                     component={ChiTietCuaHang} />
-                    {/* <StoreStack.Screen name="MapScreen"
-                    component={MapScreen} /> */}
-                    <StoreStack.Screen name="GioHang"
-                    component={GioHang} />
             </StoreStack.Navigator>
         </NavigationContainer>
     );

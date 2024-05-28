@@ -1,183 +1,108 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { COLORS, FONTFAMILY } from '../theme/theme';
+import { firebase } from '../firebase/FirebaseConfig';
+import { COLORS } from '../theme/theme';
 
 const DonHang = () => {
     const [selectedStatus, setSelectedStatus] = useState('Đang thực hiện');
     const [isLoading, setIsLoading] = useState(true);
+    const [orders, setOrders] = useState([]);
 
-    const orders = [
-        {
-            id: '1',
-            status: 'Đang thực hiện',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '305.000đ',
-            orderTime: '16:20 - 25/05/2024',
-        },
-        // {
-        //     id: '2',
-        //     status: 'Đã hoàn tất',
-        //     items: [
-        //         { id: '1', name: 'Oolong Tứ Quý Vải' },
-        //         { id: '2', name: 'Oolong Tứ Quý Vải' },
-        //         { id: '3', name: '1 sản phẩm khác' },
-        //     ],
-        //     totalCost: '200.000đ',
-        //     orderTime: '14:10 - 22/05/2024',
-        // },
-        {
-            id: '3',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        },
-        {
-            id: '4',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '11',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '9',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '5',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '6',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '7',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '8',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-        ,
-        {
-            id: '10',
-            status: 'Đã hủy',
-            items: [
-                { id: '1', name: 'Oolong Tứ Quý Vải' },
-                { id: '2', name: 'Oolong Tứ Quý Vải' },
-                { id: '3', name: '1 sản phẩm khác' },
-            ],
-            totalCost: '150.000đ',
-            orderTime: '12:00 - 20/05/2024',
-        }
-
-    ];
-
-    const filteredOrders = orders.filter(order => order.status === selectedStatus);
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timeout);
+        fetchOrders();
     }, [selectedStatus]);
+
+    const fetchOrders = async () => {
+        try {
+            setIsLoading(true);
+            const ordersRef = firebase.firestore().collection('OrderData');
+            const snapshot = await ordersRef.get();
+            const fetchedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setOrders(fetchedOrders);
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            setIsLoading(false);
+        }
+    };
+
     const handleStatusChange = (status) => {
         if (status !== selectedStatus) {
-            setIsLoading(true);
             setSelectedStatus(status);
+        }
+    };
+
+    const updateOrderStatus = async (orderId, newStatus) => {
+        try {
+            const orderRef = firebase.firestore().collection('OrderData').doc(orderId);
+            await orderRef.update({ statusOrder: newStatus });
+            fetchOrders();
+        } catch (error) {
+            console.error('Error updating order status:', error);
         }
     };
 
     const renderOrderItem = ({ item }) => (
         <View style={styles.itemContainer}>
-            <Text style={styles.itemText}>{item.name}</Text>
+            <Text style={styles.itemText}>{item.productName}</Text>
+            <Text style={styles.itemDetail}>Số lượng: {item.quantity}</Text>
+            <Text style={styles.itemDetail}>Giá: {item.totalPrice.toLocaleString()}đ</Text>
         </View>
     );
 
-    const renderOrder = ({ item }) => (
-        <View style={styles.orderContainer}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={require('../images/cup.png')} style={styles.icon}></Image>
-                <View>
-                    <FlatList
-                        data={item.items}
-                        renderItem={renderOrderItem}
-                        keyExtractor={item => item.id}
-                        style={styles.itemList}
-                    />
-                    <Text style={styles.orderTimeText}>{item.orderTime}</Text>
-                </View>
+    const renderOrder = ({ item }) => {
+        const ordersWithSelectedStatus = orders.filter(order => order.statusOrder === selectedStatus);
+
+        return (
+            <View style={styles.orderContainer}>
+                {ordersWithSelectedStatus.length > 0 ? (
+                    <View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={require('../images/cup.png')} style={styles.icon} />
+                                <View>
+                                    <FlatList
+                                        data={item.items}
+                                        renderItem={renderOrderItem}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        style={styles.itemList}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ marginLeft: 60 }}>
+                                <Text style={styles.totalCostText}>Tổng {item.totalOrderPrice.toLocaleString()}đ</Text>
+                                {selectedStatus === 'Đang thực hiện' && (
+                                    <View style={styles.actionButtons}>
+                                        <TouchableOpacity
+                                            style={[styles.actionButton, { backgroundColor: '#5F374B' }]}
+                                            onPress={() => updateOrderStatus(item.id, 'Đã hoàn tất')}
+                                        >
+                                            <Text style={styles.actionButtonText}>Đã nhận hàng</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={[styles.actionButton, { backgroundColor: 'orange' }]}
+                                            onPress={() => updateOrderStatus(item.id, 'Đã hủy')}
+                                        >
+                                            <Text style={styles.actionButtonText}>Hủy</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+                        <Text style={styles.totalCostText}>Địa chỉ: {item.addressShip}</Text>
+                    </View>
+                ) : (
+                    <View style={{ alignItems: 'center' }}>
+                        <Image source={require('../images/coffeeempty.png')} style={{ height: 100, width: 100 }} />
+                        <Text style={styles.emptyText}>Chưa có sản phẩm trong đơn hàng</Text>
+                    </View>
+                )}
             </View>
-            <View>
-                <Text style={styles.totalCostText}>{item.totalCost}</Text>
-            </View>
-        </View>
-    );
+        );
+    };
+
+
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -197,14 +122,14 @@ const DonHang = () => {
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={COLORS.primaryGreyHex} />
                 </View>
-            ) : filteredOrders.length === 0 ? (
+            ) : orders.length === 0 ? (
                 <View style={styles.emptyContainer}>
-                    <Image source={require('../images/coffeeempty.png')} style={{ height: 100, width: 100 }}></Image>
+                    <Image source={require('../images/coffeeempty.png')} style={{ height: 100, width: 100 }} />
                     <Text style={styles.emptyText}>Chưa có đơn hàng nào {selectedStatus}</Text>
                 </View>
             ) : (
                 <FlatList
-                    data={filteredOrders}
+                    data={orders.filter(order => order.statusOrder === selectedStatus)}
                     renderItem={renderOrder}
                     keyExtractor={item => item.id}
                 />
@@ -226,6 +151,19 @@ const styles = StyleSheet.create({
         color: COLORS.primaryDarkGreyHex,
         borderBottomWidth: 1,
         borderBottomColor: 'black'
+    },
+    actionButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 10,
+    },
+    actionButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    actionButtons: {
+        flexDirection: 'row',
+        marginTop: 10,
     },
     statusContainer: {
         flexDirection: 'row',
@@ -263,6 +201,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'black',
         fontWeight: 'bold'
+    },
+    itemDetail: {
+        fontSize: 16,
+        color: 'black',
     },
     totalCostText: {
         fontSize: 16,

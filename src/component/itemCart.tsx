@@ -5,43 +5,9 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 const screenWidth = Dimensions.get('window').width;
 
-function itemCart(item: any): React.JSX.Element {
-    //chứa dữ liệu của 1 item
-    // biến cho size
-    const sizes = [
-        { label: 'S', value: 'S' },
-        { label: 'M', value: 'M' },
-        { label: 'L', value: 'L' },
-    ];
-    const [openSize, setOpenSize] = useState(false);
-    const [selectedSize, setSelectedSize] = useState(item.Size); //biến 
-
-    const selectSize = (newSize: any) => {
-        setSelectedSize(newSize);
-        setOpenSize(false);
-        //cập nhật số lượng lại vào trong item
-        //item.Size = newSize;
-    };
-
-    //biến cho số lượng 
-    const [count, setCount] = useState(item.Quantity);
-
-    const increaseCount = () => {
-        setCount(count + 1);
-        //cập nhật số lượng
-        //item.Quantity = count;
-    };
-    const decreaseCount = () => {
-        if (count > 1)
-            setCount(count - 1);
-        //cập nhật số lượng
-        //item.Quantity = count;
-    };
-    //biến cho giá
-    const [price, setPrice] = useState(item.Price);
-
-    return (
-        <View style={[styles.item]}>
+function ItemCart({item}): React.JSX.Element {
+    return(
+    <View style={[styles.item]}>
             <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity>
                     <Image source={require('../images/bin.png')}
@@ -51,49 +17,24 @@ function itemCart(item: any): React.JSX.Element {
                     <View style={[styles.categoryInfor]}>
                         {/* Tên sp */}
                         <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                            Olong Tứ Quý Vải</Text>
+                            {item.name}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Dropdown
-                            style={[styles.dropdown, {}]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={styles.itemTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={sizes}
-                            labelField="label"
-                            valueField="value"
-                            placeholder="S" // lấy thông tin
-                            value={selectedSize}
-                            onChange={item => {
-                                selectSize(item.value);
-                            }}
-                        />
+                    <View style={{ flexDirection: 'row'}}>
+                        <View style={styles.dropdown}>
+                            <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'dimgray' }]}>
+                            Size: {item.size}</Text>
+                        </View>
                         {/* số lượng */}
                         <View style={[styles.quantityButton]} >
-                            <TouchableOpacity
-                                onPress={decreaseCount}>
-                                <Image source={require('../images/minus.png')}
-                                    style={{ height: 13, width: 15 }} />
-
-                            </TouchableOpacity>
-
-                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                {count}</Text>
-
-                            <TouchableOpacity
-                                onPress={increaseCount}>
-                                <Image source={require('../images/plus1.png')}
-                                    style={{ height: 13, width: 15 }} />
-
-                            </TouchableOpacity>
+                            <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'dimgray' }]}>
+                               Số lượng: {item.quantity}</Text>
                         </View>
                     </View>
                 </View>
             </View>
             {/* tổng giá */}
-            <Text style={{ fontSize: 12, color: 'black', marginBottom: 10 }}>
-                {price}</Text>
+            <Text style={{ fontSize: 14, color: 'black', marginBottom: 10 }}>
+                900đ</Text>
         </View>
     );
 };
@@ -107,6 +48,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 8,
         paddingHorizontal: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     placeholderStyle: {
         fontSize: 13,
@@ -172,4 +115,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default itemCart;
+export default ItemCart;

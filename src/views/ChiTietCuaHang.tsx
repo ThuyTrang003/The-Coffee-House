@@ -9,24 +9,13 @@ function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
     const handlePress = () => {
         navigation.goBack()
     }
-    // const handlePressToHome = () => {
-    //     navigation
-    // }
     const handlePressToMap = () => {
         navigation.navigate('MapScreen', { data: data });
-      };
-
-      const handlePressToCart = () => {
-        navigation.navigate('GioHang', {user: user});
       };
     return (
         <View style={styles.container}>
             <ScrollView>
-                {/* <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}> */}
                 <Image source={{uri: data.ImageSource}} style={styles.imageLocation}></Image>
-                {/* </ScrollView> */}
                 <TouchableOpacity style={{ position: 'absolute', top: 30, left: 30 }} onPress={handlePress}>
                     <Image source={require('../images/back.png')}
                         style={styles.icon} />
@@ -61,7 +50,7 @@ function ChiTietCuaHang({ navigation, route }): React.JSX.Element {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.orderButton} onPress={handlePressToCart} >
+            <TouchableOpacity style={styles.orderButton} >
                 <Text style={styles.orderButtonText}>Đặt sản phẩm</Text>
                 <Text style={styles.orderButtonTextSmall}>Tự đến lấy tại cửa hàng này</Text>
             </TouchableOpacity>

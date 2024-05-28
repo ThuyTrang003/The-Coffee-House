@@ -1,23 +1,206 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FlatList } from "react-native-gesture-handler";
+import ItemCart from '../component/itemCart';
+import { firebase } from "../firebase/FirebaseConfig";
 
 const screenWidth = Dimensions.get('window').width;
 
 
 
-function GioHang(): React.JSX.Element {
-
+function GioHang({ navigation, route }): React.JSX.Element {
+    const { user } = route.params;
     const [openModal, setOpenModal] = React.useState(false);
     const toggleModalShipping = () => {
         setOpenModal(!openModal);
     };
-    const [optionModel, setOptionModel] = React.useState(1);
+    const [selectedAddress, setSelectedAddress] = useState('');
+
+    const [cartData, setCartData] = useState(null);
+    const [cartAllData, setCartAllData] = useState(null);
+    const [CoffeeData, setCoffeeData] = useState([])
+    const coffeeDataQry = firebase.firestore().collection('CoffeeData')
+
+    const [TeaData, setTeaData] = useState([])
+    const teaDataQry = firebase.firestore().collection('TeaData')
+
+    const [JuiceData, setJuiceData] = useState([])
+    const juiceDataQry = firebase.firestore().collection('Juice')
+    const [totalPrice, setTotalPrice] = useState(0)
+    useEffect(() => {
+        const unsubscribeCoffee = coffeeDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            setCoffeeData(data);
+        });
+
+        const unsubscribeTea = teaDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            setTeaData(data);
+        });
+
+        const unsubscribeJuice = juiceDataQry.onSnapshot(snapshot => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            setJuiceData(data);
+        });
+
+        return () => {
+            unsubscribeCoffee();
+            unsubscribeTea();
+            unsubscribeJuice();
+        };
+    }, []);
+    console.log(CoffeeData)
+    console.log(TeaData)
+    console.log(JuiceData)
+    const cartDataHandler = async () => {
+        const docref = firebase.firestore().collection('UserCart').doc(user.uid);
+        try {
+            await docref.get().then((doc) => {
+                if (doc.exists) {
+                    setCartAllData(doc.data().cartItems);
+                } else {
+                    console.log('There is no data');
+                }
+            })
+        } catch (error) {
+            console.log('Error fetching cart data:', error);
+        }
+    };
+    const selectAddress = (address) => {
+        setSelectedAddress(address);
+    };
+    const createOrder = async () => {
+        try {
+            const orderRef = firebase.firestore().collection('OrderData');
+            const timestamp = firebase.firestore.Timestamp.now();
+            const orderItems = cartAllData.map(item => {
+                let nData = null;
+                if (CoffeeData.some(coffee => coffee.id === item.itemId)) {
+                    nData = CoffeeData.find(coffee => coffee.id === item.itemId);
+                } else if (TeaData.some(tea => tea.id === item.itemId)) {
+                    nData = TeaData.find(tea => tea.id === item.itemId);
+                } else if (JuiceData.some(juice => juice.id === item.itemId)) {
+                    nData = JuiceData.find(juice => juice.id === item.itemId);
+                }
+
+                const itemTotalPrice = getPriceForSize(nData, item.itemSize) * item.itemQuantity;
+                return {
+                    productName: nData ? nData.Name : "Unknown",
+                    size: mapSize(item.itemSize),
+                    quantity: item.itemQuantity,
+                    totalPrice: itemTotalPrice,
+                };
+            });
+
+            const totalOrderPrice = orderItems.reduce((acc, curr) => acc + curr.totalPrice, 0);
+
+            await orderRef.add({
+                userId: user.uid,
+                items: orderItems,
+                totalOrderPrice: totalOrderPrice,
+                statusOrder: 'Đang thực hiện',
+                orderTime: timestamp,
+                addressShip: selectedAddress
+            });
+
+            console.log('Đặt hàng thành công');
+            clearCart();
+        } catch (error) {
+            console.error('Lỗi khi đặt hàng:', error);
+        }
+    };
+    const deleteCartItem = async (itemId) => {
+        try {
+            const docRef = firebase.firestore().collection('UserCart').doc(user.uid);
+            const updatedCartItems = cartAllData.filter(item => item.cartItemId !== itemId);
+            await docRef.update({
+                cartItems: updatedCartItems,
+            });
+            setCartAllData(updatedCartItems);
+        } catch (error) {
+            console.error('Lỗi khi xóa sản phẩm:', error);
+        }
+    };
+
+    const clearCart = async () => {
+        try {
+            const docRef = firebase.firestore().collection('UserCart').doc(user.uid);
+            await docRef.update({
+                cartItems: [],
+            });
+            setCartAllData(null);
+            setTotalPrice(0);
+        } catch (error) {
+            console.error('Lỗi khi xóa giỏ hàng sau khi đặt hàng:', error);
+        }
+    };
+
+    console.log(cartAllData)
     //modal giao hàng
+    const mapSize = (size) => {
+        switch (size) {
+            case 'SizeSmall':
+                return 'Nhỏ';
+            case 'SizeMedium':
+                return 'Vừa';
+            case 'SizeLarge':
+                return 'Lớn';
+            default:
+                return size;
+        }
+    };
+    const getPriceForSize = (product, size) => {
+        if (size == 'SizeSmall') {
+            return product.Price.SizeSmall;
+        }
+        else if (size == 'SizeMedium') {
+            return product.Price.SizeMedium;
+        }
+        else {
+            return product.Price.SizeLarge;
+        }
+    };
+    useEffect(() => {
+        const fetchData = async () => {
+            await cartDataHandler();
+            calculateTotalPrice(cartAllData);
+        };
+
+        fetchData();
+    }, [cartAllData]);
+    const calculateTotalPrice = (cartAllData) => {
+        let total = 0;
+        cartAllData.forEach(item => {
+            let nData = null;
+            if (CoffeeData.some(coffee => coffee.id === item.itemId)) {
+                nData = CoffeeData.find(coffee => coffee.id === item.itemId);
+            } else if (TeaData.some(tea => tea.id === item.itemId)) {
+                nData = TeaData.find(tea => tea.id === item.itemId);
+            } else if (JuiceData.some(juice => juice.id === item.itemId)) {
+                nData = JuiceData.find(juice => juice.id === item.itemId);
+            }
+            if (nData) {
+                total += getPriceForSize(nData, item.itemSize) * item.itemQuantity;
+            }
+        });
+
+        console.log('Total Price:', total.toLocaleString());
+        setTotalPrice(total);
+    };
+
     function renderModal() {
         return (
             <Modal
@@ -40,190 +223,64 @@ function GioHang(): React.JSX.Element {
 
                     </View>
 
-                    <TouchableOpacity
-                        onPress={toggleModalShipping}>
+                    <TouchableOpacity onPress={() => selectAddress('484 Lê Văn Việt, Tăng Nhơn Phú A, Thủ Đức')}>
                         <View style={[styles.item]}>
                             <View style={{ flexDirection: 'row' }}>
-                                <Image source={require('../images/edit.png')}
-                                    style={{ height: 17, width: 17, marginRight: 10 }} />
+                                <Image source={require('../images/edit.png')} style={{ height: 17, width: 17, marginRight: 10 }} />
                                 <View style={[styles.categoryInfor]}>
-                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                        Giao hàng</Text>
-                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
-                                        Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà Địa chỉ nhà</Text>
-
+                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>Giao hàng</Text>
+                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>484 Lê Văn Việt, Tăng Nhơn Phú A, Thủ Đức</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity
-
-                                style={[styles.button1]}>
-
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Sửa</Text>
-                            </TouchableOpacity>
                         </View>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={toggleModalShipping}>
+                    <TouchableOpacity onPress={() => selectAddress('28 Hoàng Diệu 2, TP. Thủ Đức')}>
                         <View style={styles.item}>
                             <View style={{ flexDirection: 'row' }}>
-                                <Image source={require('../images/edit.png')}
-                                    style={{ height: 17, width: 17, marginRight: 10 }} />
+                                <Image source={require('../images/edit.png')} style={{ height: 17, width: 17, marginRight: 10 }} />
                                 <View style={[styles.categoryInfor]}>
-                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                                        Mang đi</Text>
-                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>
-                                        Địa chỉ quán Địa chỉ quán Địa chỉiii quán Địa chỉ quán </Text>
-
+                                    <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>Mang đi</Text>
+                                    <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'gray' }]}>28 Hoàng Diệu 2, TP. Thủ Đức</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity
-                                style={[styles.button1]}>
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Sửa</Text>
-                            </TouchableOpacity>
                         </View>
                     </TouchableOpacity>
+
+
                 </View>
             </Modal>
         )
     }
 
-    // biến cho size
-    const sizes = [
-        { label: 'S', value: 'S' },
-        { label: 'M', value: 'M' },
-        { label: 'L', value: 'L' },
-    ];
-    const [openSize, setOpenSize] = useState(false);
-    const [selectedSize, setSelectedSize] = useState('S');
-
-    const selectSize = (option: any) => {
-        setSelectedSize(option);
-        setOpenSize(false);
-    };
-    // tăng, giảm số lượng
-    const increaseCount = (id: string, newQuantity: number, newPrice: number) => {
-
-        setData(prevData =>
-            prevData.map(item =>
-                item.id === id ? { ...item, quantity: newQuantity, price:newPrice } : item
-            )
-        );
-    };
-    const decreaseCount = (id: string, newQuantity: number, newPrice: number) => {
-        if (newQuantity + 1 > 1) {
-            setData(prevData =>
-                prevData.map(item =>
-                    item.id === id ? { ...item, quantity: newQuantity, price:newPrice } : item
-                )
-            );
-        }
-
-    };
-
-    //chứa dữ liệu của 1 item
-    const [data, setData] = useState([
-        { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: 30000, quantity: 1 },
-        { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: 40000, quantity: 2 },
-        { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: 50000, quantity: 3 },
-    ]);
-    const renderItem = ({ item }) => (
-
-        <View style={[styles.item]}>
-            <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity>
-                    <Image source={require('../images/bin.png')}
-                        style={{ height: 17, width: 17, marginRight: 10 }} />
-                </TouchableOpacity>
-                <View>
-                    <View style={[styles.categoryInfor]}>
-                        {/* Tên sp */}
-                        <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
-                            {item.name}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        {/* <Dropdown
-                            style={[styles.dropdown, {}]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={styles.itemTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={sizes}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={item.size}// lấy thông tin
-                            value={selectedSize}
-                            onChange={item => {
-                                selectSize(item.value);
-                                //item.size= selectedSize;
-                            }}
-                        /> */}
-                        <View style={styles.dropdown}>
-                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                Size: </Text>
-                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                {item.size}</Text>
-                        </View>
-                        {/* số lượng */}
-                        <View style={[styles.quantityButton]} >
-                            <TouchableOpacity
-                                onPress={() => {decreaseCount(item.id, item.quantity - 1, (item.price-item.price/item.quantity));
-
-                                    console.log((item.price-item.price/item.quantity));
-                                }}
-                            >
-                                <Image source={require('../images/minus.png')}
-                                    style={{ height: 13, width: 15 }} />
-
-                            </TouchableOpacity>
-                            {/* <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                SL: </Text> */}
-                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
-                                {item.quantity}</Text>
-
-                            <TouchableOpacity
-                                onPress={() => { increaseCount(item.id, item.quantity + 1, (item.price+item.price/item.quantity)) }}
-                            >
-                                <Image source={require('../images/plus1.png')}
-                                    style={{ height: 13, width: 15 }} />
-
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </View>
-            {/* tổng giá */}
-            <Text style={{ fontSize: 14, color: 'black', marginBottom: 10 }}>
-                {item.price.toFixed(1)}đ</Text>
-        </View>
-    );
-
-    //hàm chính
     return (
         <View style={styles.background}>
             <View style={styles.header}>
-                <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
-                    Xóa</Text>
+                <TouchableOpacity onPress={() => clearCart()}>
+                    <Text style={[styles.fontWeightLight, { fontSize: 13, color: 'gray' }]}>
+                        Xóa</Text>
+                </TouchableOpacity>
                 <Text style={[styles.fontWeight, { fontSize: 15, color: 'black', marginLeft: (screenWidth - 230) / 2 }]}>
                     Xác nhận đơn hàng</Text>
             </View>
             <GestureHandlerRootView style={{ flex: 8 }}>
-                <ScrollView>
-                    <View style={styles.titleComponent}>
-                        <View style={styles.component}>
-                            <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
-                                Phương thức lấy hàng</Text>
-                            <TouchableOpacity
-                                onPress={() => setOpenModal(true)}
-                                style={[styles.button1]}>
+                <View style={styles.titleComponent}>
+                    <View style={styles.component}>
+                        <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
+                            Phương thức lấy hàng</Text>
+                        <TouchableOpacity
+                            onPress={() => setOpenModal(true)}
+                            style={[styles.button1]}>
 
-                                <Text style={{ fontSize: 12, color: 'black' }}>
-                                    Thay đổi</Text>
-                            </TouchableOpacity>
-                        </View>
+                            <Text style={{ fontSize: 12, color: 'black' }}>
+                                Thay đổi</Text>
+                        </TouchableOpacity>
                     </View>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={[styles.fontWeight, { fontSize: 13, color: 'gray' }]}>
+                            Địa chỉ: {selectedAddress}</Text>
+                    </View>
+                </View>
+                {cartAllData && cartAllData.length > 0 ? (
                     <View style={styles.titleComponent}>
                         <View style={styles.component}>
                             <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
@@ -234,15 +291,55 @@ function GioHang(): React.JSX.Element {
                             </TouchableOpacity>
                         </View>
 
-                        {/* chứa component */}
                         <FlatList
-                            data={data}
-                            renderItem={renderItem}
+                            data={cartAllData}
+                            renderItem={({ item }) => {
+                                let nData = null;
+                                if (CoffeeData.some(coffee => coffee.id === item.itemId)) {
+                                    nData = CoffeeData.find(coffee => coffee.id === item.itemId);
+                                } else if (TeaData.some(tea => tea.id === item.itemId)) {
+                                    nData = TeaData.find(tea => tea.id === item.itemId);
+                                } else if (JuiceData.some(juice => juice.id === item.itemId)) {
+                                    nData = JuiceData.find(juice => juice.id === item.itemId);
+                                }
+
+                                return (
+                                    <View style={[styles.item]}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => deleteCartItem(item.cartItemId)}>
+                                                <Image source={require('../images/bin.png')}
+                                                    style={{ height: 17, width: 17, marginRight: 10 }} />
+                                            </TouchableOpacity>
+                                            <View>
+                                                <View style={[styles.categoryInfor]}>
+                                                    <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
+                                                        {nData ? nData.Name : "Unknown"}</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={styles.dropdown}>
+                                                        <Text style={[styles.fontWeightLight, { fontSize: 12, color: 'dimgray' }]}>
+                                                            Size: {mapSize(item.itemSize)}</Text>
+                                                    </View>
+                                                    <View style={[styles.quantityButton]} >
+                                                        <Text style={[styles.fontWeightLight, { fontSize: 11, color: 'dimgray' }]}>
+                                                            Số lượng: {item.itemQuantity}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+
+                                        <Text style={{ fontSize: 14, color: 'black', marginBottom: 10 }}>
+                                            {(getPriceForSize(nData, item.itemSize) * item.itemQuantity).toLocaleString()}đ</Text>
+                                    </View>
+                                );
+                            }}
                             keyExtractor={item => item.id}
                         />
-
                     </View>
-                </ScrollView>
+                ) : (
+                    <Text style={{ textAlign: 'center', marginTop: 20 }}>
+                        Giỏ hàng trống</Text>
+                )}
             </GestureHandlerRootView>
             <View style={[styles.totalPay]}>
                 <View style={[styles.component]}>
@@ -250,10 +347,10 @@ function GioHang(): React.JSX.Element {
                         Tổng tiền
                     </Text>
                     <Text style={[styles.fontWeight, { fontSize: 15, color: 'black' }]}>
-                        300.000đ
+                        {totalPrice.toLocaleString()}đ
                     </Text>
                 </View>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity style={[styles.button]} onPress={createOrder} >
                     <Text style={[styles.fontWeight, { fontSize: 14, color: 'white' }]}>
                         Đặt hàng</Text>
                 </TouchableOpacity>
@@ -364,6 +461,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 8,
         paddingHorizontal: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     placeholderStyle: {
         fontSize: 13,
