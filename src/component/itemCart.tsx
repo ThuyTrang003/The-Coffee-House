@@ -5,9 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 const screenWidth = Dimensions.get('window').width;
 
-
-
-function itemCart(item: any) {
+function itemCart(item: any): React.JSX.Element {
     //chứa dữ liệu của 1 item
     // biến cho size
     const sizes = [

@@ -4,17 +4,10 @@ import Modal from 'react-native-modal';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dropdown } from 'react-native-element-dropdown';
-import itemCart from "../component/itemCart";
 import { FlatList } from "react-native-gesture-handler";
-import ItemCart from '../component/itemCart';
 
 const screenWidth = Dimensions.get('window').width;
-//chứa dữ liệu của 1 item
-const [data, setData] = useState([
-    { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: '30000', quantity: 1 },
-    { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: '30000', quantity: 1 },
-    { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: '30000', quantity: 1 },
-]);
+
 
 
 function GioHang(): React.JSX.Element {
@@ -24,30 +17,6 @@ function GioHang(): React.JSX.Element {
         setOpenModal(!openModal);
     };
     const [optionModel, setOptionModel] = React.useState(1);
-
-    // biến cho size
-    const sizes = [
-        { label: 'S', value: 'S' },
-        { label: 'M', value: 'M' },
-        { label: 'L', value: 'L' },
-    ];
-    const [openSize, setOpenSize] = useState(false);
-    const [selectedSize, setSelectedSize] = useState('S');
-
-    const selectSize = (option: any) => {
-        setSelectedSize(option);
-        setOpenSize(false);
-    };
-    //biến cho số lượng
-    const [count, setCount] = useState(0);
-
-    const increaseCount = () => {
-        setCount(count + 1);
-    };
-    const decreaseCount = () => {
-        if (count > 1)
-            setCount(count - 1);
-    };
     //modal giao hàng
     function renderModal() {
         return (
@@ -121,6 +90,113 @@ function GioHang(): React.JSX.Element {
         )
     }
 
+    // biến cho size
+    const sizes = [
+        { label: 'S', value: 'S' },
+        { label: 'M', value: 'M' },
+        { label: 'L', value: 'L' },
+    ];
+    const [openSize, setOpenSize] = useState(false);
+    const [selectedSize, setSelectedSize] = useState('S');
+
+    const selectSize = (option: any) => {
+        setSelectedSize(option);
+        setOpenSize(false);
+    };
+    // tăng, giảm số lượng
+    const increaseCount = (id: string, newQuantity: number) => {
+
+        setData(prevData =>
+            prevData.map(item =>
+                item.id === id ? { ...item, quantity: newQuantity } : item
+            )
+        );
+    };
+    const decreaseCount = (id: string, newQuantity: number) => {
+        if (newQuantity + 1 > 1) {
+            setData(prevData =>
+                prevData.map(item =>
+                    item.id === id ? { ...item, quantity: newQuantity } : item
+                )
+            );
+        }
+
+    };
+
+    //chứa dữ liệu của 1 item
+    const [data, setData] = useState([
+        { id: '1', name: 'Olong Tứ Quý Vải1', size: 'S', price: '30000', quantity: 1 },
+        { id: '2', name: 'Olong Tứ Quý Vải2', size: 'M', price: '40000', quantity: 2 },
+        { id: '3', name: 'Olong Tứ Quý Vải3', size: 'L', price: '50000', quantity: 3 },
+    ]);
+    const renderItem = ({ item }) => (
+
+        <View style={[styles.item]}>
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity>
+                    <Image source={require('../images/bin.png')}
+                        style={{ height: 17, width: 17, marginRight: 10 }} />
+                </TouchableOpacity>
+                <View>
+                    <View style={[styles.categoryInfor]}>
+                        {/* Tên sp */}
+                        <Text style={[styles.fontWeight, { fontSize: 12, color: 'black' }]}>
+                            {item.name}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        {/* <Dropdown
+                            style={[styles.dropdown, {}]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            itemTextStyle={styles.itemTextStyle}
+                            iconStyle={styles.iconStyle}
+                            data={sizes}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={item.size}// lấy thông tin
+                            value={selectedSize}
+                            onChange={item => {
+                                selectSize(item.value);
+                                //item.size= selectedSize;
+                            }}
+                        /> */}
+                        <View style={styles.dropdown}>
+                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
+                                Size: </Text>
+                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
+                                {item.size}</Text>
+                        </View>
+                        {/* số lượng */}
+                        <View style={[styles.quantityButton]} >
+                            {/* <TouchableOpacity
+                                onPress={() => decreaseCount(item.id, item.quantity - 1)}
+                            >
+                                <Image source={require('../images/minus.png')}
+                                    style={{ height: 13, width: 15 }} />
+
+                            </TouchableOpacity> */}
+                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
+                                SL: </Text>
+                            <Text style={[styles.fontWeightLight, { fontSize: 15, color: 'dimgray' }]}>
+                                {item.quantity}</Text>
+
+                            {/* <TouchableOpacity
+                                onPress={() => { increaseCount(item.id, item.quantity + 1) }}
+                            >
+                                <Image source={require('../images/plus1.png')}
+                                    style={{ height: 13, width: 15 }} />
+
+                            </TouchableOpacity> */}
+                        </View>
+                    </View>
+                </View>
+            </View>
+            {/* tổng giá */}
+            <Text style={{ fontSize: 14, color: 'black', marginBottom: 10 }}>
+                {item.price}</Text>
+        </View>
+    );
+
     //hàm chính
     return (
         <View style={styles.background}>
@@ -158,12 +234,8 @@ function GioHang(): React.JSX.Element {
                         {/* chứa component */}
                         <FlatList
                             data={data}
-                            renderItem={({ item }) => (
-                                <itemCart item={item} />
-                            )}
-                            keyExtractor={(item) => item.id}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id}
                         />
 
                     </View>
@@ -283,7 +355,8 @@ const styles = StyleSheet.create({
     //dropdown
     dropdown: {
         height: 30,
-        width: 60,
+        width: 80,
+        flexDirection: 'row',
         borderColor: 'black',
         borderWidth: 0.5,
         borderRadius: 8,
@@ -312,7 +385,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 8,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         marginLeft: 10,
         alignItems: 'center'
     },
